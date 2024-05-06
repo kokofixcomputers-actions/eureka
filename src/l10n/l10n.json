@@ -14,10 +14,10 @@
         "eureka.openFrontend": "🎨 Open Frontend",
         "eureka.sideload": "🌎 Sideload from URL",
         "eureka.sideloadTemporarily": "📄 Sideload from File",
-        "eureka.errorIgnored": "❌ Error occurred while sideloading extension. To avoid interrupting the loading process, we chose to ignore this error.",
+        "eureka.errorIgnored": "❌ Error occurred while sideloading extension. To avoid interrupting the loading process, this error is ignored.",
         "eureka.exprimentalFileWarning": "🛠️ This is an experimental feature -- the extension will be unavailable after reloading.\nAre you sure you want to continue?",
-        "eureka.tryLoad": "🤨 Project is trying to loading {extensionURL} from {url}. Do you want to load via Eureka?",
-        "eureka.tryLoadInEnv": "🤨 Project is trying to sideloading {extensionURL} from {url} in {env} mode. Do you want to load?",
+        "eureka.tryLoad": "🤨 Project is trying to loading {extensionURL} from {url}. Do you want to load via Eureka? Your project may break if not loaded from eureka.",
+        "eureka.tryLoadInEnv": "🤨 Project is trying to sideloading {extensionURL} from {url} in {env} mode. Do you want to load? Your project may break if not loaded from eureka.",
         "eureka.loadInSandbox": "🤨 Do you want to load it as sandbox extension?\n\n✅ [OK] Load it as sandboxed extension.\n❌ [Cancel] Load it as unsandboxed extension (insecure).",
         "eureka.enterURL": "🌐 Enter URL."
     },
