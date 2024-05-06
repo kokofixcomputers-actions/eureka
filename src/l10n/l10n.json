@@ -11,7 +11,7 @@
         "eureka.enterURL": "🌐 输入 URL。"
     },
     "en": {
-        "eureka.openFrontend": "🎨 Open Frontend",
+        "eureka.openFrontend": "🎨 Open UI Manager",
         "eureka.sideload": "🌎 Sideload from URL",
         "eureka.sideloadTemporarily": "📄 Sideload from File",
         "eureka.errorIgnored": "❌ Error occurred while sideloading extension. To avoid interrupting the loading process, this error is ignored.",
@@ -19,7 +19,7 @@
         "eureka.tryLoad": "🤨 Project is trying to loading {extensionURL} from {url}. Do you want to load via Eureka? Your project may break if not loaded from eureka.",
         "eureka.tryLoadInEnv": "🤨 Project is trying to sideloading {extensionURL} from {url} in {env} mode. Do you want to load? Your project may break if not loaded from eureka.",
         "eureka.loadInSandbox": "🤨 Do you want to load it as sandbox extension?\n\n✅ [OK] Load it as sandboxed extension.\n❌ [Cancel] Load it as unsandboxed extension (insecure).",
-        "eureka.enterURL": "🌐 Enter URL."
+        "eureka.enterURL": "🌐 Enter URL to load."
     },
     "ja": {
         "eureka.openFrontend": "🎨 ダッシュボードを開く",
