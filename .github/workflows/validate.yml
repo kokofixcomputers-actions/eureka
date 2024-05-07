@@ -15,6 +15,7 @@ jobs:
         with:
           node-version: 18.x
           cache: 'yarn'
+          fetch-depth: 0
       - name: Run Git Fetch
         id: git_fetch_run
         run: |
