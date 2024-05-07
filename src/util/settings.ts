@@ -12,7 +12,7 @@ const puppet: Settings = {
     sideloadOnly: true
 };
 
-const SETTINGS_KEY = '$CHIBI_SETTINGS';
+const SETTINGS_KEY = '$EUREKA_SETTINGS';
 
 if (!window.localStorage.getItem(SETTINGS_KEY)) {
     window.localStorage.setItem(SETTINGS_KEY, JSON.stringify(puppet));
