@@ -545,7 +545,7 @@ function injectToolbox (
     const docsButton = document.createElement('button');
     docsButton.setAttribute('text', format('eureka.openDocs'));
     docsButton.setAttribute('callbackKey', 'EUREKA_DOCS');
-    workspace.registerButtonCallback('EUREKA_FRONTEND', () => {
+    workspace.registerButtonCallback('EUREKA_DOCS', () => {
         window.open('https://kokofixcomputers.gitbook.io/eureka-docs-unofficial', '_blank');
     });
     xmlList.push(docsButton);
