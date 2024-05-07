@@ -12,6 +12,7 @@
     },
     "en": {
         "eureka.openFrontend": "🎨 Open UI Manager",
+        "eureka.openDocs": "💡 Open Docs",
         "eureka.sideload": "🌎 Sideload from URL",
         "eureka.sideloadTemporarily": "📄 Sideload from File",
         "eureka.errorIgnored": "❌ Error occurred while sideloading extension. To avoid interrupting the loading process, this error is ignored.",

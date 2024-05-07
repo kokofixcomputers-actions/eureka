@@ -541,6 +541,14 @@ function injectToolbox (
     const label = document.createElement('label');
     label.setAttribute('text', '💡 Eureka');
     xmlList.push(label);
+    // Add docs button
+    const docsButton = document.createElement('button');
+    docsButton.setAttribute('text', format('eureka.openDocs'));
+    docsButton.setAttribute('callbackKey', 'EUREKA_DOCS');
+    workspace.registerButtonCallback('EUREKA_FRONTEND', () => {
+        window.open('https://kokofixcomputers.gitbook.io/eureka-docs-unofficial', '_blank');
+    });
+    xmlList.push(docsButton);
 
     // Add dashboard button
     const dashboardButton = document.createElement('button');
