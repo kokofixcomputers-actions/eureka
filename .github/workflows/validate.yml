@@ -20,7 +20,7 @@ jobs:
       - name: Run Git Fetch
         id: git_fetch_run
         run: |
-          git fetch --prune --unshallow
+          git fetch --prune
       - name: Install
         run: yarn install --frozen-lockfile
       - name: Check types and Build
