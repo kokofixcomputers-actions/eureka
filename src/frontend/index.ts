@@ -49,7 +49,7 @@ function getExtensionInfo () {
  * @param event Event from the frontend.
  */
 async function messageHandler (event: MessageEvent) {
-    if (event.origin !== 'https://eureka.codingclip.cc') return;
+    if (event.origin !== 'https://eureka-scratch.vercel.app') return;
     if (!('type' in event.data)) return;
     switch ((event.data as MothDispatched).type) {
         // Handshake: send current extension info in order to prepare frontend.
@@ -116,7 +116,7 @@ window.addEventListener('message', messageHandler);
  */
 function openFrontend (open: typeof window.open) {
     dashboardWindow = open(
-        'https://eureka.codingclip.cc/#manage',
+        'https://eureka-scratch.vercel.app/#manage',
         'Eureka',
         'popup=yes,status=no,location=no,toolbar=no,menubar=no'
     );

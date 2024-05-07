@@ -4,7 +4,7 @@
   "version": "8.1",
   "description": "Universal scratch extension loader.",
   "repository": "https://github.com/EurekaScratch/eureka",
-  "author": "SimonShiki",
+  "author": "originally by SimonShiki forked by kokofixcomputers",
   "license": "AGPL-3.0-only",
   "private": true,
   "scripts": {
