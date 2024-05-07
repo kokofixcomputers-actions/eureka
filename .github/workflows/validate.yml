@@ -17,11 +17,10 @@ jobs:
         with:
           node-version: 18.x
           cache: 'yarn'
-          fetch-depth: 0
       - name: Run Git Fetch
         id: git_fetch_run
         run: |
-          git fetch
+          git fetch --prune --unshallow
       - name: Install
         run: yarn install --frozen-lockfile
       - name: Check types and Build
@@ -35,28 +34,18 @@ jobs:
           path: |
             dist/eureka-loader.user.js
             dist/unpacked-extension.zip
-      - name: Get Latest Release Tag
-        id: get_latest_tag
+      - name: Get Version from package.json
+        id: package_version
         run: |
-          latest_tag=$(git describe --tags --abbrev=0)
-          echo "latest_tag=$latest_tag" >> $GITHUB_OUTPUT
-      - name: Increment Release Tag
-        id: increment_tag
-        run: |
-          version=$(echo ${{ steps.get_latest_tag.outputs.latest_tag }} | sed 's/^v//')
-          IFS='.' read -ra version_parts <<< "$version"
-          major=${version_parts[0]}
-          minor=${version_parts[1]}
-          patch=$((${version_parts[2]} + 1))
-          new_version="v$major.$minor.$patch"
-          echo "new_version=$new_version" >> $GITHUB_OUTPUT
+          version=$(jq -r '.version' package.json)
+          echo "version=$version" >> $GITHUB_OUTPUT
       - name: Create Release
         uses: "marvinpinto/action-automatic-releases@latest"
         with:
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
-          automatic_release_tag: "${{ steps.increment_tag.outputs.new_version }}"
+          automatic_release_tag: "${{ steps.package_version.outputs.version }}"
           prerelease: false
-          title: "Release ${{ steps.increment_tag.outputs.new_version }}"
+          title: "Release ${{ steps.package_version.outputs.version }}"
           files: |
             dist/eureka-loader.user.js
             dist/unpacked-extension.zip
