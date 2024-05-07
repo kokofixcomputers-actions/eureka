@@ -28,6 +28,10 @@ jobs:
           path: |
             dist/eureka-loader.user.js
             dist/unpacked-extension.zip
+      - name: Run Git Fetch
+        id: git_fetch_run
+        run: |
+          git fetch
       - name: Get Latest Release Tag
         id: get_latest_tag
         run: |
