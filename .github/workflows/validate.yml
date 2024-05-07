@@ -28,11 +28,26 @@ jobs:
           path: |
             dist/eureka-loader.user.js
             dist/unpacked-extension.zip
+      - name: Get Latest Release Tag
+        id: get_latest_tag
+        run: |
+          latest_tag=$(git describe --tags --abbrev=0)
+          echo "latest_tag=$latest_tag" >> $GITHUB_OUTPUT
+      - name: Increment Release Tag
+        id: increment_tag
+        run: |
+          version=$(echo ${{ steps.get_latest_tag.outputs.latest_tag }} | sed 's/^v//')
+          IFS='.' read -ra version_parts <<< "$version"
+          major=${version_parts[0]}
+          minor=${version_parts[1]}
+          patch=$((${version_parts[2]} + 1))
+          new_version="v$major.$minor.$patch"
+          echo "new_version=$new_version" >> $GITHUB_OUTPUT
       - name: Create Nightly Release
         uses: "marvinpinto/action-automatic-releases@latest"
         with:
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
-          automatic_release_tag: "aurora"
+          automatic_release_tag: "${{ steps.increment_tag.outputs.new_version }}"
           prerelease: true
           title: "Aurora"
           files: |
