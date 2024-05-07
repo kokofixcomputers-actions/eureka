@@ -49,7 +49,7 @@ jobs:
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
           automatic_release_tag: "${{ steps.increment_tag.outputs.new_version }}"
           prerelease: true
-          title: "Aurora"
+          title: "Release"
           files: |
             dist/eureka-loader.user.js
             dist/unpacked-extension.zip
