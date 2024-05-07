@@ -50,13 +50,13 @@ jobs:
           patch=$((${version_parts[2]} + 1))
           new_version="v$major.$minor.$patch"
           echo "new_version=$new_version" >> $GITHUB_OUTPUT
-      - name: Create Nightly Release
+      - name: Create Release
         uses: "marvinpinto/action-automatic-releases@latest"
         with:
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
           automatic_release_tag: "${{ steps.increment_tag.outputs.new_version }}"
-          prerelease: true
-          title: "Release"
+          prerelease: false
+          title: "Release ${{ steps.increment_tag.outputs.new_version }}"
           files: |
             dist/eureka-loader.user.js
             dist/unpacked-extension.zip
