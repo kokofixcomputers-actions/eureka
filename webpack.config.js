@@ -59,8 +59,8 @@ const standalone = {
                 version: packageJSON.version,
                 license: packageJSON.license,
                 grant: ['none'],
-                updateURL: 'https://eureka-scratch.vercel.app/release/eureka-loader.user.js',
-                downloadURL: 'https://eureka-scratch.vercel.app/release/eureka-loader.user.js',
+                updateURL: 'https://github.com/kokofixcomputers/eureka/releases/download/latest/eureka-loader.user.js',
+                downloadURL: 'https://github.com/kokofixcomputers/eureka/releases/download/latest/eureka-loader.user.js',
                 'run-at': 'document-start',
                 include: includeURLs
             },
