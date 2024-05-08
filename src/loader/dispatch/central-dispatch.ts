@@ -1,4 +1,5 @@
 import { SharedDispatch, DispatchCallMessage } from './shared-dispatch';
+import {warn, error} from '../../util/log'
 /**
  * This class serves as the central broker for message dispatch. It expects to operate on the main thread / Window and
  * it must be informed of any Worker threads which will participate in the messaging system. From any context in the
@@ -56,7 +57,7 @@ class _CentralDispatch extends SharedDispatch {
      */
     setServiceSync (service: string, provider: any) {
         if (Object.prototype.hasOwnProperty.call(this.services, service)) {
-            console.warn(`Central dispatch replacing existing service provider for ${service}`);
+            warn(`Central dispatch replacing existing service provider for ${service}`);
         }
         this.services[service] = provider;
     }
@@ -86,10 +87,10 @@ class _CentralDispatch extends SharedDispatch {
             this.workers.push(worker);
             worker.onmessage = this._onMessage.bind(this, worker);
             this._remoteCall(worker, 'dispatch', 'handshake').catch((e) => {
-                console.error(`Could not handshake with worker: ${e}`);
+                error(`Could not handshake with worker: ${e}`);
             });
         } else {
-            console.warn('Central dispatch ignoring attempt to add duplicate worker');
+            warn('Central dispatch ignoring attempt to add duplicate worker');
         }
     }
     /**
@@ -123,13 +124,13 @@ class _CentralDispatch extends SharedDispatch {
         switch (message.method) {
             case 'setService':
                 if (!message.args) {
-                    console.error('setService received empty argument');
+                    error('setService received empty argument');
                     break;
                 }
                 promise = this.setService(String(message.args[0]), worker);
                 break;
             default:
-                console.error(
+                error(
                     `Central dispatch received message for unknown method: ${message.method}`
                 );
         }

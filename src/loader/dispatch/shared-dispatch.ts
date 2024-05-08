@@ -1,3 +1,4 @@
+import {warn, error} from '../../util/log'
 /**
  * A message to the dispatch system representing a service method call
  */
@@ -189,7 +190,7 @@ class SharedDispatch {
                 resolve(message.result);
             }
         } catch (e) {
-            console.error(`Dispatch callback failed: ${e}`);
+            error(`Dispatch callback failed: ${e}`);
         }
     }
     /**
@@ -210,7 +211,7 @@ class SharedDispatch {
                 promise = this.call(message.service, message.method, ...message.args);
             }
         } else if (typeof message.responseId === 'undefined') {
-            console.error(
+            error(
                 `Dispatch caught malformed message from a worker: ${JSON.stringify(event)}`
             );
         } else {
@@ -218,7 +219,7 @@ class SharedDispatch {
         }
         if (promise) {
             if (typeof message.responseId === 'undefined') {
-                console.error(
+                error(
                     `Dispatch message missing required response ID: ${JSON.stringify(event)}`
                 );
             } else {

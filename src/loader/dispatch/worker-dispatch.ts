@@ -1,4 +1,5 @@
 import { DispatchCallMessage, SharedDispatch } from './shared-dispatch';
+import {warn} from '../../util/log'
 
 /**
  * This class provides a Worker with the means to participate in the message dispatch system managed by CentralDispatch.
@@ -61,7 +62,7 @@ class _WorkerDispatch extends SharedDispatch {
      */
     setService (service: string, provider: unknown) {
         if (Object.prototype.hasOwnProperty.call(this.services, service)) {
-            console.warn(`Worker dispatch replacing existing service provider for ${service}`);
+            warn(`Worker dispatch replacing existing service provider for ${service}`);
         }
         this.services[service] = provider;
         return this.waitForConnection.then(() =>
@@ -105,7 +106,7 @@ class _WorkerDispatch extends SharedDispatch {
                 promise = Promise.resolve();
                 break;
             default:
-                console.warn(
+                warn(
                     `Worker dispatch received message for unknown method: ${message.method}. Ignoreing.`
                 );
         }
