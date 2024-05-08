@@ -2,7 +2,7 @@
   "name": "eureka-loader",
   "displayName": "Eureka",
   "version": "0.1.4",
-  "description": "Universal scratch extension loader.",
+  "description": "Universal scratch extension loader. Write once use everwhere",
   "repository": "https://github.com/kokofixcomputers/eureka",
   "author": "originally by SimonShiki forked by kokofixcomputers",
   "license": "AGPL-3.0-only",
