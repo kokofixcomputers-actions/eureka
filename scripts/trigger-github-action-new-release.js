@@ -25,11 +25,11 @@ async function triggerWorkflow(owner, repo, workflowId, ref, inputs) {
 
 // Example usage
 triggerWorkflow(
-  'kokofixcomputers',
-  'eureka',
-  'validate.yml',
+  'kokofixcomputers', //Owner of repo
+  'eureka', //repo name
+  'validate.yml', // workflow id can also be the name of the file
   'trunk', // The git reference for the workflow (branch or tag name)
   {
-    triggered_by: 'GitHub API'
+    triggered_by: 'GitHub API' //junk that should be get rid of later
   }
 );
