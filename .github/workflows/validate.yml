@@ -26,8 +26,8 @@ jobs:
         run: yarn install --frozen-lockfile
       - name: Set Git user
         run: |
-          git config --global user.name "kokofixcomputers"
-          git config --global user.email "github@kokofixcomputers.serv00.net"
+          git config --global user.name "kokofixcomputers-bot"
+          git config --global user.email "kokobot@kokofixcomputers.serv00.net"
       - name: Check types and Build
         run: yarn tsc --noEmit && NODE_ENV=PRODUCTION yarn run build
       - name: Pack Chrome Extension
