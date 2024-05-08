@@ -50,6 +50,17 @@ jobs:
           git add eureka-loader.user.js
           git commit -m "Update eureka-loader.user.js"
           git push
+      - name: Comment on Commit
+        uses: actions/github-script@v6
+        with:
+          github-token: ${{ secrets.KOKOBOT_TOKEN }}
+          script: |
+            github.rest.repos.createCommitComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              commit_sha: context.sha,
+              body: 'Build Succeeded!'
+            })
       - name: Create Release
         uses: "marvinpinto/action-automatic-releases@latest"
         with:
