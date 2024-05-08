@@ -62,38 +62,12 @@ jobs:
               body: 'Build Succeeded!'
             })
       - name: Create Release
-        uses: actions/github-script@v6
+        uses: "marvinpinto/action-automatic-releases@latest"
         with:
-          github-token: ${{ secrets.KOKOBOT_TOKEN }}
-          script: |
-            const fs = require('fs');
-            const { execSync } = require('child_process');
-
-            const version = '${{ steps.package_version.outputs.version }}';
-            const releaseBody = execSync('git log --pretty=format:"%h: %s (%an)" --reverse').toString();
-
-            github.rest.repos.createRelease({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              tag_name: version,
-              name: `Release ${version}`,
-              body: releaseBody,
-              draft: false,
-              prerelease: false
-            });
-
-            github.rest.repos.uploadReleaseAsset({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              release_id: context.payload.release.id,
-              name: 'eureka-loader.user.js',
-              data: fs.readFileSync('eureka-loader.user.js')
-            });
-
-            github.rest.repos.uploadReleaseAsset({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              release_id: context.payload.release.id,
-              name: 'unpacked-extension.zip',
-              data: fs.readFileSync('dist/unpacked-extension.zip')
-            });
+          repo_token: "${{ secrets.KOKOBOT_TOKEN }}"
+          automatic_release_tag: "${{ steps.package_version.outputs.version }}"
+          prerelease: false
+          title: "Release ${{ steps.package_version.outputs.version }}"
+          files: |
+            eureka-loader.user.js
+            dist/unpacked-extension.zip
