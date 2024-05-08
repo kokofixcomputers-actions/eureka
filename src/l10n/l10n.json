@@ -20,7 +20,7 @@
         "eureka.tryLoad": "🤨 Project is trying to loading {extensionURL} from {url}. Do you want to load via Eureka? Your project may break if not loaded from eureka.",
         "eureka.tryLoadInEnv": "🤨 Project is trying to sideloading {extensionURL} from {url} in {env} mode. Do you want to load? Your project may break if not loaded from eureka.",
         "eureka.loadInSandbox": "🤨 Do you want to load it as sandbox extension?\n\n✅ [OK] Load it as sandboxed extension.\n❌ [Cancel] Load it as unsandboxed extension (may be unsafe).",
-        "eureka.enterURL": "🌐 Enter URL to load."
+        "eureka.enterURL": "🌐 Enter URL the extension is located to load."
     },
     "ja": {
         "eureka.openFrontend": "🎨 ダッシュボードを開く",
