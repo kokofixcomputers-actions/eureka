@@ -62,7 +62,7 @@ const standalone = {
                 updateURL: 'https://github.com/kokofixcomputers/eureka/raw/trunk/eureka-loader.user.js',
                 downloadURL: 'https://github.com/kokofixcomputers/eureka/raw/trunk/eureka-loader.user.js',
                 'run-at': 'document-start',
-                include: includeURLs
+                match: includeURLs
             },
             pretty: true,
             strict: true,
