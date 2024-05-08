@@ -1,4 +1,5 @@
 import { Settings, getSettingsFromStorage } from '../util/settings';
+import { log, warn, error } from '../util/log';
 
 let dashboardWindow: Window | null = null;
 
@@ -49,12 +50,12 @@ function getExtensionInfo () {
  * @param event Event from the frontend.
  */
 async function messageHandler (event: MessageEvent) {
-    if (event.origin !== 'https://eureka-scratch.vercel.app') return;
+    if (event.origin !== 'https://eureka-scratch.vercel.app') { error('Message origin is not from the default website. A error may have occured.'); return; }
     if (!('type' in event.data)) return;
     switch ((event.data as MothDispatched).type) {
         // Handshake: send current extension info in order to prepare frontend.
         case 'allocate':
-            console.log('handshake with frontend');
+            log('Handshaking with frontend...');
             dashboardWindow?.postMessage(
                 {
                     type: 'handshake',
@@ -82,6 +83,7 @@ async function messageHandler (event: MessageEvent) {
             break;
         case 'load':
             // Load an extension.
+            log('Loading extension from frontend...');
             await window.eureka.loader.load(
                 event.data.info.url,
                 event.data.info.sandboxed ? 'sandboxed' : 'unsandboxed'
@@ -95,6 +97,7 @@ async function messageHandler (event: MessageEvent) {
             );
             break;
         case 'updateSettings':
+            log('Updating settings from frontend...');
             window.eureka.settings[event.data.item.name] = event.data.item.value;
             dashboardWindow?.postMessage(
                 {

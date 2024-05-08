@@ -105,8 +105,8 @@ class _WorkerDispatch extends SharedDispatch {
                 promise = Promise.resolve();
                 break;
             default:
-                console.error(
-                    `Worker dispatch received message for unknown method: ${message.method}`
+                console.warn(
+                    `Worker dispatch received message for unknown method: ${message.method}. Ignoreing.`
                 );
         }
         return promise;
