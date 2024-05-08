@@ -1,11 +1,11 @@
-name: Validate
+name: Build and publish
 
 on:
   workflow_dispatch:
 
 jobs:
   validate:
-    name: Validating Code
+    name: Build and publish code
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
