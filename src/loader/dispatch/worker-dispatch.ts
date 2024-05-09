@@ -1,7 +1,7 @@
 import { DispatchCallMessage, SharedDispatch } from './shared-dispatch';
 import {warn} from '../../util/log';
 
-/**
+/
  * This class provides a Worker with the means to participate in the message dispatch system managed by CentralDispatch.
  * From any context in the messaging system, the dispatcher's "call" method can call any method on any "service"
  * provided in any participating context. The dispatch system will forward function arguments and return values across
