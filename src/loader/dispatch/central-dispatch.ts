@@ -1,5 +1,5 @@
 import { SharedDispatch, DispatchCallMessage } from './shared-dispatch';
-import {warn, error} from '../../util/log'
+import {warn, error} from '../../util/log';
 /**
  * This class serves as the central broker for message dispatch. It expects to operate on the main thread / Window and
  * it must be informed of any Worker threads which will participate in the messaging system. From any context in the

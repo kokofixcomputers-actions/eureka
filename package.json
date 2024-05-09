@@ -11,6 +11,7 @@
     "build": "NODE_ENV=production webpack --color --bail",
     "extension:pack": "node ./scripts/generate-extension.js",
     "lint": "eslint ./src/ --ext .js,.ts,tsx,jsx",
+    "lintfix": "eslint ./src/ --ext .js,.ts,tsx,jsx --fix",
     "typecheck": "tsc --watch --noEmit",
     "publish:release": "node ./scripts/trigger-github-action-new-release.js"
   },

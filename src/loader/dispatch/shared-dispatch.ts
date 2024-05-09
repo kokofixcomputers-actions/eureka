@@ -1,4 +1,4 @@
-import {warn, error} from '../../util/log'
+import {error} from '../../util/log';
 /**
  * A message to the dispatch system representing a service method call
  */

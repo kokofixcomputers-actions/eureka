@@ -1,5 +1,5 @@
 import { Settings, getSettingsFromStorage } from '../util/settings';
-import { log, warn, error } from '../util/log';
+import { log, warn} from '../util/log';
 
 let dashboardWindow: Window | null = null;
 
@@ -117,13 +117,13 @@ window.addEventListener('message', messageHandler);
  * Open the popup (?) window.
  * @param open window.open function (compatible with ccw).
  */
-function openFrontend(open: typeof window.open) {
+function openFrontend (open: typeof window.open) {
     // Open the frontend in a popup window
     dashboardWindow = open(
-      'https://eureka-scratch.vercel.app/#manage',
-      'Eureka',
-      'width=800,height=600,popup=yes,status=no,location=no,toolbar=no,menubar=no'
+        'https://eureka-scratch.vercel.app/#manage',
+        'Eureka',
+        'width=800,height=600,popup=yes,status=no,location=no,toolbar=no,menubar=no'
     );
-  }
+}
 
 export default openFrontend;

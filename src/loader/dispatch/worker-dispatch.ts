@@ -1,5 +1,5 @@
 import { DispatchCallMessage, SharedDispatch } from './shared-dispatch';
-import {warn} from '../../util/log'
+import {warn} from '../../util/log';
 
 /**
  * This class provides a Worker with the means to participate in the message dispatch system managed by CentralDispatch.
