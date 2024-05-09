@@ -150,7 +150,7 @@ export async function getVMInstance (): Promise<EurekaCompatibleVM | null> {
     try {
         const vm = await new Promise<EurekaCompatibleVM>((resolve, reject) => {
             const timeoutId = setTimeout(() => {
-                log('Cannot find vm instance, stop listening.');
+                log('Cannot find vm instance, listening timeout.');
                 Function.prototype.bind = oldBind;
                 reject();
             }, MAX_LISTENING_MS);
@@ -334,7 +334,7 @@ export function injectVM (vm: EurekaCompatibleVM) {
 
             // Migrate from old eureka
             if (projectJSON.extensionEnvs) {
-                log('Old eureka-ify project detected, migrating...');
+                log('Old eureka project detected. Migrating...');
                 extensionEnvs = projectJSON.sideloadExtensionEnvs =
                     projectJSON.extensionEnvs as Record<string, unknown>;
                 delete projectJSON.extensionEnvs;
@@ -371,13 +371,13 @@ export function injectVM (vm: EurekaCompatibleVM) {
                             const extensionId = getExtensionIdForOpcode(originalOpcode);
                             if (!extensionId) {
                                 warn(
-                                    `find a sideload block with an invalid id: ${originalOpcode}, ignored.`
+                                    `found a sideload block with an invalid id: ${originalOpcode}, ignored. This is not a problem with eureka but rather a problem with the extension.`
                                 );
                                 continue;
                             }
                             if (!(extensionId in window.eureka.registeredExtension)) {
                                 warn(
-                                    `find a sideload block with unregistered extension: ${extensionId}, ignored.`
+                                    `found a sideload block with unregistered extension: ${extensionId}, ignored. This is not a problem with eureka but rather a problem with the extension.`
                                 );
                                 continue;
                             }
@@ -446,10 +446,10 @@ export function injectVM (vm: EurekaCompatibleVM) {
         const eurekaFlag = args.VALUE;
         switch (eurekaFlag) {
             case '🧐 Chibi?':
-                warn("'🧐 Chibi?' is deprecated, use '🧐 Eureka?' instead.");
+                warn("'🧐 Chibi?' is deprecated, use '🧐 Eureka?' instead and may be removed in the near future.");
                 return true;
             case '🧐 Chibi Installed?':
-                warn("'🧐 Chibi Installed?' is deprecated, use '🧐 Eureka?' instead.");
+                warn("'🧐 Chibi Installed?' is deprecated, use '🧐 Eureka?' instead and may be removed in the near future.");
                 return true;
             case '🧐 Eureka?':
                 return true;
@@ -508,7 +508,7 @@ export function injectBlockly (blockly: any) {
         const originalProcedureCallback =
             window.Blockly?.getMainWorkspace()?.toolboxCategoryCallbacks_?.PROCEDURE;
         if (typeof originalProcedureCallback !== 'function') {
-            error('alternative method failed, stop injecting');
+            error('alternative method failed. extension quit on this session. please refresh page to try again.');
             return;
         }
         window.Blockly.getMainWorkspace().toolboxCategoryCallbacks_.PROCEDURE = function (
