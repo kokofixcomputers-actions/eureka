@@ -1,0 +1,45 @@
+name: Test Code
+
+on:
+  push:
+
+jobs:
+  validate:
+    name: Test Code
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Setup node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18.x
+          cache: 'yarn'
+      - name: Run Git Fetch
+        id: git_fetch_run
+        run: |
+          git fetch --prune
+      - name: Install
+        run: yarn install --frozen-lockfile
+      - name: Set Git user
+        run: |
+          git config --global user.name "kokofixcomputers-bot"
+          git config --global user.email "kokobot@kokofixcomputers.serv00.net"
+      - name: Check types and Build
+        run: yarn tsc --noEmit && NODE_ENV=PRODUCTION yarn run build
+      - name: Pack Chrome Extension
+        run: yarn run extension:pack
+      - name: Comment on Commit
+        uses: actions/github-script@v6
+        with:
+          github-token: ${{ secrets.KOKOBOT_TOKEN }}
+          script: |
+            github.rest.repos.createCommitComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              commit_sha: context.sha,
+              body: 'Test Succeded.'
+            })
