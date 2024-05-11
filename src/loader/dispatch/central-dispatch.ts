@@ -87,7 +87,7 @@ class _CentralDispatch extends SharedDispatch {
             this.workers.push(worker);
             worker.onmessage = this._onMessage.bind(this, worker);
             this._remoteCall(worker, 'dispatch', 'handshake').catch((e) => {
-                error(`Could not handshake with worker: ${e}`);
+                error(`Could not handshake with worker: ${e} There may be an issue while using this plugin.`);
             });
         } else {
             warn('Central dispatch ignoring attempt to add duplicate worker');
@@ -124,14 +124,14 @@ class _CentralDispatch extends SharedDispatch {
         switch (message.method) {
             case 'setService':
                 if (!message.args) {
-                    error('setService received empty argument');
+                    error('setService received empty argument. Ignored.');
                     break;
                 }
                 promise = this.setService(String(message.args[0]), worker);
                 break;
             default:
                 error(
-                    `Central dispatch received message for unknown method: ${message.method}`
+                    `Central dispatch received message for unknown method: ${message.method}. Ignored.`
                 );
         }
         return promise;
