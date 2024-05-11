@@ -4,6 +4,25 @@ on:
   workflow_dispatch:
 
 jobs:
+  update-version:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Get latest release
+      id: latest_release
+      uses: postrepo/github-action-get-latest-release@v1
+      with:
+        repository: ${{ github.repository }}
+    - name: Get package.json version
+      id: package_version
+      uses: martinbeentjes/npm-get-version-action@v1.3.1
+    - name: Update package.json version
+      if: ${{ steps.latest_release.outputs.release != steps.package_version.outputs.current-version }}
+      run: |
+        npm version ${{ steps.latest_release.outputs.release }} --no-git-tag-version
+        git add package.json
+        git commit -m "Bump version to ${{ steps.latest_release.outputs.release }} because someone forgot to update version."
+        git push
   validate:
     name: Build and publish code
     runs-on: ubuntu-latest
