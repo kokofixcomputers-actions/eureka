@@ -454,6 +454,7 @@ export function injectVM (vm: EurekaCompatibleVM) {
             case '🧐 Eureka?':
                 return true;
             default:
+                log('Debug: ' + eurekaFlag);
                 return originalArgReporterBooleanFunc.call(this, args, ...otherArgs);
         }
     };
