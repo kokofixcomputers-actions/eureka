@@ -17,7 +17,7 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 18.x
-          cache: 'yarn'
+          cache: 'npm'
       - name: Run Git Fetch
         id: git_fetch_run
         run: |
