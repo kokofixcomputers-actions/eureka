@@ -23,7 +23,7 @@ jobs:
         run: |
           git fetch --prune
       - name: Install
-        run: yarn install --frozen-lockfile
+        run: npm install
       - name: Set Git user
         run: |
           git config --global user.name "kokofixcomputers-bot"
