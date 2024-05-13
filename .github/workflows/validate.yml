@@ -4,30 +4,6 @@ on:
   workflow_dispatch:
 
 jobs:
-  update-version:
-    runs-on: self-hosted
-    steps:
-    - uses: actions/checkout@v2
-    - name: Get latest release version
-      id: latest_release
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      run: |
-        latest_release=$(curl -s -H "Authorization: token $GITHUB_TOKEN" \
-          https://api.github.com/repos/${{ github.repository }}/releases/latest | \
-          grep '"tag_name":' | \
-          sed -E 's/.*"([^"]+)".*/\1/')
-        echo "::set-output name=release::$latest_release"
-    - name: Get package.json version  
-      id: package_version
-      uses: martinbeentjes/npm-get-version-action@v1.3.1
-    - name: Update package.json version
-      if: ${{ steps.latest_release.outputs.release != steps.package_version.outputs.current-version }}
-      run: |
-        npm version ${{ steps.latest_release.outputs.release }} --no-git-tag-version
-        git add package.json
-        git commit -m "Bump version to ${{ steps.latest_release.outputs.release }}"
-        git push
   validate:
     name: Build and publish code
     runs-on: self-hosted
