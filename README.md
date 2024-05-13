@@ -54,7 +54,7 @@ This repo is a fork of the [original repo](https://github.com/EurekaScratch/eure
 More info on docs
 
 # 🥰 Contribute extensions
-Eureka's front-end provides an extension gallary where you can pick any extension you like. You are also welcome to contribute your own extensions to the gallary. For more information please visit [moth](https://github.com/EurekaScratch/moth)
+Eureka's front-end provides an extension gallary where you can pick any extension you like. You are also welcome to contribute your own extensions to the gallary. For more information please visit [moth](https://github.com/EurekaScratch/moth) feel free to contribute to my repo or the original one
 
 # ⚓ License
 AGPL-3.0, see [LICENSE](./LICENSE).
