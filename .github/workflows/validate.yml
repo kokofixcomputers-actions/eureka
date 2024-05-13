@@ -5,7 +5,7 @@ on:
 
 jobs:
   update-version:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     steps:
     - uses: actions/checkout@v2
     - name: Get latest release version
@@ -30,7 +30,7 @@ jobs:
         git push
   validate:
     name: Build and publish code
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -41,21 +41,21 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 18.x
-          cache: 'yarn'
+          cache: 'npm'
       - name: Run Git Fetch
         id: git_fetch_run
         run: |
           git fetch --prune
       - name: Install
-        run: yarn install --frozen-lockfile
+        run: npm install
       - name: Set Git user
         run: |
           git config --global user.name "kokofixcomputers-bot"
           git config --global user.email "kokobot@kokofixcomputers.serv00.net"
       - name: Check types and Build
-        run: yarn tsc --noEmit && NODE_ENV=PRODUCTION yarn run build
+        run: NODE_ENV=PRODUCTION npm run build
       - name: Pack Chrome Extension
-        run: yarn run extension:pack
+        run: npm run extension:pack
       - name: Upload Userscript And Extension
         uses: actions/upload-artifact@v3
         with:
