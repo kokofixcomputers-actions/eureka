@@ -57,3 +57,9 @@ Eureka's front-end provides an extension gallary where you can pick any extensio
 
 # ⚓ License
 AGPL-3.0, see [LICENSE](./LICENSE).
+
+# Supported Languages:
+zh-cn
+en
+zh-Hant
+ja
