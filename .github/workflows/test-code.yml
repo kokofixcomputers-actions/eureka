@@ -29,9 +29,9 @@ jobs:
           git config --global user.name "kokofixcomputers-bot"
           git config --global user.email "kokobot@kokofixcomputers.serv00.net"
       - name: Check types and Build
-        run: yarn tsc --noEmit && NODE_ENV=PRODUCTION yarn run build
+        run: npm tsc --noEmit && NODE_ENV=PRODUCTION npm run build
       - name: Pack Chrome Extension
-        run: yarn run extension:pack
+        run: npm run extension:pack
       - name: Comment on Commit
         uses: actions/github-script@v6
         with:
