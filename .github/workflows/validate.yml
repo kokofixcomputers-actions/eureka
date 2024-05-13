@@ -66,7 +66,7 @@ jobs:
       - name: Get Version from package.json
         id: package_version
         run: |
-          version=$(jq -r '.version' package.json)
+          version=$(sed -n 's/"version": "\(.*\)"/\1/p' package.json)
           echo "version=$version" >> $GITHUB_OUTPUT
       - name: Copy eureka-loader.user.js to repo
         run: |
