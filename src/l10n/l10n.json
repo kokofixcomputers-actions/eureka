@@ -23,6 +23,18 @@
         "eureka.loadInSandbox": "🤨 Do you want to load it as sandbox extension?\n\n✅ [OK] Load it as sandboxed extension.\n❌ [Cancel] Load it as unsandboxed extension (may be unsafe).",
         "eureka.enterURL": "🌐 Enter URL the extension is located to load."
     },
+    "zh-Hant": {
+        "eureka.openFrontend": "🎨 開啟 UI 管理器",
+        "eureka.openDocs": "💡 開啟文件",
+        "eureka.sideload": "🌎 從 URL 側載",
+        "eureka.sideloadTemporarily": "📄 從檔案側載",
+        "eureka.errorIgnored": "❌ 側載擴充功能時發生錯誤。為了避免中斷載入過程,此錯誤已被忽略。",
+        "eureka.exprimentalFileWarning": "🛠️ 這是一個實驗性功能 -- 重新載入後擴充功能將不可用。\n您確定要繼續嗎？",
+        "eureka.tryLoad": "🤨 專案正嘗試從 {url} 載入 {extensionURL}。您要透過 Eureka 載入嗎？如果不是從 eureka 載入,您的專案可能會損壞。",
+        "eureka.tryLoadInEnv": "🤨 專案正嘗試在 {env} 模式下從 {url} 側載 {extensionURL}。您要載入嗎？如果不是從 eureka 載入,您的專案可能會損壞。",
+        "eureka.loadInSandbox": "🤨 您要將其載入為沙盒擴充功能嗎？\n\n✅ [確定] 將其載入為沙盒擴充功能。\n❌ [取消] 將其載入為非沙盒擴充功能(可能不安全)。",
+        "eureka.enterURL": "🌐 輸入擴充功能所在的 URL 以載入。"
+        },
     "ja": {
         "eureka.openFrontend": "🎨 ダッシュボードを開く",
         "eureka.openDocs": "💡 ドキュメントを開く",
