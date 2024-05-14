@@ -1,4 +1,4 @@
-zh_cn | [日本語](./README-ja_JP.md) | [EN](./README.md)
+简体中文 | [日本語](./README-ja_JP.md) | [EN](./README.md)
 <div align="center">
 
 <img alt="logo" src="./assets/eureka.svg" width="200px">
