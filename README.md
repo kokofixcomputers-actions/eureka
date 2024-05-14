@@ -10,6 +10,7 @@
 </div>
 
 ---
+Visit the docs for more information.
 Docs: [https://kokofixcomputers.gitbook.io/eureka-docs-unofficial/developers/compiling](https://kokofixcomputers.gitbook.io/eureka-docs-unofficial/developers/compiling) (also unofficial)
 
 Eureka is a userscript which can load 3rd-party extensions in any Scratch-based editors (theoretically). 
