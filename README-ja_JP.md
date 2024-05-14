@@ -1,5 +1,5 @@
+[简体中文](./README-zh_CN.md) | 日本語 | [EN](./README.md)
 <div align="center">
-[简体中文](./README-zh_CN.md) | [日本語](./README-ja_JP.md) | EN
 
 <img alt="logo" src="./assets/eureka.svg" width="200px">
 
