@@ -29,7 +29,7 @@ jobs:
           git config --global user.name "kokofixcomputers-bot"
           git config --global user.email "kokobot@kokofixcomputers.serv00.net"
       - name: Check types and Build
-        run: NODE_ENV=PRODUCTION npm run build
+        run: $env:NODE_ENV="PRODUCTION"; npm run build; if ($?) { } else { cmd.exe /c "set NODE_ENV=PRODUCTION && npm run build" }
       - name: Pack Chrome Extension
         run: npm run extension:pack
       - name: Comment on Commit
