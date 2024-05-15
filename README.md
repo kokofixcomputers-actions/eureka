@@ -5,7 +5,7 @@
 <img alt="logo" src="./assets/eureka.svg" width="200px">
 
 # Eureka
-#### Universal Scratch extension loader
+#### Universal Scratch extension loader 
 
 </div>
 
