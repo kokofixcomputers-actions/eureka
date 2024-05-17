@@ -21,7 +21,7 @@ This repo is a fork of the [original repo](https://github.com/EurekaScratch/eure
 - [x] TurboWarp Extension API (very small part)
 - [x] Fallback solution for visitors without script installation
 - [x] Load from editor
-
+ 
 # 🌈 Supported platforms
 - [x] Scratch
 - [x] Codingclip
