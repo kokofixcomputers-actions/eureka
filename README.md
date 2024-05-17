@@ -8,7 +8,7 @@
 #### Universal Scratch extension loader 
 
 </div>
-
+ 
 ---
 Visit the docs for more information.
 Docs: [https://kokofixcomputers.gitbook.io/eureka-docs-unofficial/developers/compiling](https://kokofixcomputers.gitbook.io/eureka-docs-unofficial/developers/compiling) (also unofficial)
