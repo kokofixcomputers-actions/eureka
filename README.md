@@ -7,7 +7,7 @@
 # Eureka
 #### Universal Scratch extension loader 
 
-</div>
+</div> 
  
 ---
 Visit the docs for more information.
