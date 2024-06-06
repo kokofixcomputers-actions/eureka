@@ -11,7 +11,7 @@
  
 ---
 Visit the docs for more information.
-Docs: [https://kokofixcomputers.gitbook.io/eureka-docs-unofficial/developers/compiling](https://kokofixcomputers.gitbook.io/eureka-docs-unofficial/developers/compiling) (also unofficial)
+Docs: [https://kokofixcomputers.gitbook.io/eureka-docs-unofficial/](https://kokofixcomputers.gitbook.io/eureka-docs-unofficial/) (also unofficial)
 
 Eureka is a userscript which can load 3rd-party extensions in any Scratch-based editors (theoretically). 
 This repo is a fork of the [original repo](https://github.com/EurekaScratch/eureka) and is intended to improve eureka.
