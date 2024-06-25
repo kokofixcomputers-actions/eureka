@@ -15,6 +15,9 @@ Docs: [https://kokofixcomputers.gitbook.io/eureka-docs-unofficial/](https://koko
 
 Eureka is a userscript which can load 3rd-party extensions in any Scratch-based editors (theoretically). 
 This repo is a fork of the [original repo](https://github.com/EurekaScratch/eureka) and is intended to improve eureka.
+
+
+
 # ✨ Features
 - [x] Load Scratch standard extensions 
 - [x] Unsandboxed extensions
@@ -23,21 +26,23 @@ This repo is a fork of the [original repo](https://github.com/EurekaScratch/eure
 - [x] Load from editor
  
 # 🌈 Supported platforms
-- [x] Scratch
-- [x] Codingclip
-- [x] Cocrea
-- [x] Aerfaying (阿儿法营)
-- [x] Co-Create World (共创世界)
-- [x] Xiaomawang (小码王)
-- [x] CodeLab
-- [x] 40code
-- [x] TurboWarp
+- [x] Scratch (https://scratch.mit.edu/projects/*)
+- [x] Codingclip (https://codingclip.com/*)
+- [x] Cocrea (https://cocrea.world/*)
+- [x] Aerfaying (阿儿法营) (https://aerfaying.com/Projects/*)
+- [x] Co-Create World (共创世界) (https://cocrea.world/*)
+- [x] Xiaomawang (小码王) (https://world.xiaomawang.com/*)
+- [x] CodeLab (https://create.codelab.club/*)
+- [x] 40code (https://www.40code.com/*)
+- [x] TurboWarp (https://turbowarp.org/*)
 - [x] Xueersi (学而思)
 - [x] Creaticode
-- [x] Adacraft
+- [x] Adacraft (https://www.adacraft.org/*)
 - [x] PenguinMod
-- [x] ElectraMod *
+- [x] ElectraMod * (https://electramod.vercel.app/*)
 - [x] XPLab *
+
+I have no idea which is which.... so please feel free to contribute too!
 
 *\*: only available in ci builds*
 
