@@ -1,37 +1,53 @@
 {
-  "name": "eureka-loader",
-  "displayName": "Eureka",
-  "version": "8.1",
-  "description": "Universal scratch extension loader.",
-  "repository": "https://github.com/EurekaScratch/eureka",
+  "name": "eureka",
+  "version": "10.0.0",
+  "description": "Universal Scratch Extension Loader",
   "author": "SimonShiki",
   "license": "AGPL-3.0-only",
   "private": true,
-  "scripts": {
-    "build": "NODE_ENV=production webpack --color --bail",
-    "extension:pack": "node ./scripts/generate-extension.js",
-    "lint": "eslint ./src/ --ext .js,.ts,tsx,jsx",
-    "typecheck": "tsc --watch --noEmit"
+  "engines": {
+    "node": ">=18"
   },
-  "devDependencies": {
-    "@babel/core": "^7.26.0",
-    "@babel/preset-env": "^7.26.0",
-    "@babel/preset-typescript": "^7.26.0",
-    "@turbowarp/types": "^0.0.11",
-    "@typescript-eslint/eslint-plugin": "^7.0.0",
-    "@typescript-eslint/parser": "^6.21.0",
-    "archiver": "^6.0.2",
-    "babel-loader": "^9.2.1",
-    "codingclip-worker-loader": "^3.0.9",
-    "eslint": "^8.57.1",
-    "mini-svg-data-uri": "^1.4.4",
-    "typescript": "^5.6.3",
-    "webpack": "^5.96.0",
-    "webpack-cli": "^5.1.4",
-    "webpack-dev-server": "^5.1.0",
-    "webpack-userscript": "^3.2.2"
+  "scripts": {
+    "prepare": "husky",
+    "dev": "rollup -wc",
+    "clean": "del-cli dist",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint --ext .ts,.tsx . && prettier --ignore-path .eslintignore --check .",
+    "lint:fix": "eslint --ext .ts,.tsx --fix . && prettier --ignore-path .eslintignore --write .",
+    "ci": "yarn typecheck && run-s lint",
+    "build:js": "rollup -c",
+    "build": "cross-env NODE_ENV=production run-s ci clean build:js"
   },
   "dependencies": {
-    "format-message": "6.2.4"
+    "@babel/runtime": "^7.24.1",
+    "format-message": "^6.2.4",
+    "solid-js": "^1.8.16"
+  },
+  "devDependencies": {
+    "@babel/plugin-transform-react-jsx": "^7.23.4",
+    "@gera2ld/plaid": "~2.7.0",
+    "@gera2ld/plaid-rollup": "~2.7.0",
+    "@unocss/postcss": "^0.58.6",
+    "@violentmonkey/types": "^0.1.7",
+    "babel-preset-solid": "^1.8.16",
+    "cross-env": "^7.0.3",
+    "del-cli": "^5.1.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-solid": "^0.14.3",
+    "husky": "^9.0.11",
+    "lint-staged": "^15.2.2",
+    "prettier": "^3.2.5",
+    "read-package-up": "^11.0.0",
+    "rollup-plugin-serve": "^1.1.1",
+    "rollup-plugin-userscript": "^0.3.2",
+    "typescript": "^5.6.3",
+    "unocss": "^0.58.6"
+  },
+  "lint-staged": {
+    "src/**": [
+      "eslint --fix",
+      "prettier --write"
+    ]
   }
 }
