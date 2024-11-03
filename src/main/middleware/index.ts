@@ -362,7 +362,7 @@ function makeScratchObject (ctx: EurekaContext): ExtendedScratchObject {
  * @param vm Virtual machine instance. Optional.
  * @returns Something like Scratch.translate.
  */
-function createTranslate (vm?: DucktypedVM) {
+function createTranslate (vm: DucktypedVM) {
     const namespace = formatMessage.namespace();
 
     const translate = (message: Message, args?: object) => {
@@ -380,11 +380,9 @@ function createTranslate (vm?: DucktypedVM) {
 
     const generateId = (defaultMessage: string) => `_${defaultMessage}`;
 
-    const getLocale = () => {
-        if (vm) return vm.getLocale();
-        if (typeof navigator !== 'undefined') return navigator.language; // FIXME: en-US -> en
-        return 'en';
-    };
+    let currentLocale = vm.getLocale();
+
+    const getLocale = () => currentLocale;
 
     let storedTranslations = {};
     translate.setup = (newTranslations: Message | object | null) => {
@@ -402,7 +400,8 @@ function createTranslate (vm?: DucktypedVM) {
     translate.setup({});
 
     if (vm) {
-        vm.on('LOCALE_CHANGED', () => {
+        vm.on('LOCALE_CHANGED', (locale: string) => {
+            currentLocale = locale;
             translate.setup(null);
         });
     }

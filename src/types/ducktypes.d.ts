@@ -35,7 +35,8 @@ interface DucktypedVM {
         loadExtensionURL(extensionURL: string): Promise<void>;
         refreshBlocks (): Promise<void[]>;
     }
-    on (eventName: string, callback: (...args: any[]) => any);
+    on (eventName: string, callback: (...args: any[]) => any): void;
+    emit (eventName: string, ...args: any[]): void;
     runtime: {
         _primitives: {
             argument_reporter_boolean (
@@ -52,6 +53,7 @@ interface DucktypedVM {
         _convertForScratchBlocks (info: ExtensionBlockMetadata, categoryInfo: CategoryInfo): ConvertedBlockInfo;
         _convertButtonForScratchBlocks (info: ExtensionBlockMetadata, categoryInfo: CategoryInfo): ConvertedBlockInfo;
         getEditingTarget (): any;
+        getTargetForStage (): any;
     }
     toJSON(optTargetId?: string): string;
     deserializeProject(projectJSON: string, zip): Promise<void>;

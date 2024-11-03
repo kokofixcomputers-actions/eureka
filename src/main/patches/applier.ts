@@ -6,6 +6,7 @@ import { forwardedLoadExtensionURL, predefinedCallbackKeys, refreshForwardedBloc
 import { BlockType } from '../middleware/extension-metadata';
 import xmlEscape from '../util/xml-escape';
 import { maybeFormatMessage } from '../util/maybe-format-message';
+import * as l10n from '../util/l10n';
 
 const settings = settingsAgent.getSettings();
 
@@ -200,6 +201,8 @@ export function applyPatches (vm: DucktypedVM, blocks: DucktypedScratchBlocks | 
             vm,
             {
                 setLocale (originalMethod, locale, messages) {
+                    l10n.setLocale(locale);
+                    vm.emit('LOCALE_CHANGED', locale);
                     return originalMethod?.(locale, messages);
                 },
             }
