@@ -13,8 +13,8 @@
     "dev": "rollup -wc",
     "clean": "del-cli dist",
     "typecheck": "tsc --noEmit",
-    "lint": "eslint --ext .ts,.tsx . && prettier --ignore-path .eslintignore --check .",
-    "lint:fix": "eslint --ext .ts,.tsx --fix . && prettier --ignore-path .eslintignore --write .",
+    "lint": "eslint --ext .ts,.tsx .",
+    "lint:fix": "eslint --ext .ts,.tsx --fix .",
     "ci": "yarn typecheck && run-s lint",
     "build:js": "rollup -c",
     "build": "cross-env NODE_ENV=production run-s ci clean build:js"
@@ -36,18 +36,10 @@
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-solid": "^0.14.3",
     "husky": "^9.0.11",
-    "lint-staged": "^15.2.2",
-    "prettier": "^3.2.5",
     "read-package-up": "^11.0.0",
     "rollup-plugin-serve": "^1.1.1",
     "rollup-plugin-userscript": "^0.3.2",
     "typescript": "^5.6.3",
     "unocss": "^0.58.6"
-  },
-  "lint-staged": {
-    "src/**": [
-      "eslint --fix",
-      "prettier --write"
-    ]
   }
 }

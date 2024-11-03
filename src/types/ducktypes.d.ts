@@ -63,6 +63,7 @@ interface DucktypedBlocksWorkspace {
     toolboxCategoryCallbacks_: {
         PROCEDURE (workspace: DucktypedBlocksWorkspace): HTMLElement[];
     }
+    toolboxCategoryCallbacks?: Map<string, (workspace: DucktypedBlocksWorkspace) => void>;
     registerButtonCallback (callbackKey: string, callback: () => void): void;
     getToolbox(): DucktypedToolbox;
     toolboxRefreshEnabled_: boolean;
@@ -71,6 +72,15 @@ interface DucktypedBlocksWorkspace {
 interface DucktypedScratchBlocks {
     Procedures: {
         addCreateButton_(workspace: DucktypedBlocksWorkspace, xmlList: HTMLElement[]): void;
-    },
+    }
+    Blocks: {
+        [opcode: string]: {
+            init (): void;
+        }
+    }
+    dragging: {
+        BlockDragStrategy (blocks: unknown): void;
+    }
     getMainWorkspace (): DucktypedBlocksWorkspace;
+    __esModule?: boolean;
 }

@@ -20,9 +20,11 @@ interface Settings {
         'vm.exports.ScriptTreeGenerator.prototype.descendInput': boolean;
         'vm.ccExtensionManager.getExtensionLoadOrder': boolean;
         'blocks.Procedures.addCreateButton_': boolean;
-        'blocks.getMainWorkspace().toolboxCategoryCallbacks_': boolean;
+        'blocks.getMainWorkspace().toolboxCategoryCallbacks_.PROCEDURE': boolean;
+        'blocks.getMainWorkspace().toolboxCategoryCallbacks.PROCEDURE': boolean;
         'vm.runtime._convertForScratchBlocks': boolean;
         'vm.runtime._convertButtonForScratchBlocks': boolean;
+        'blocks.Blocks.argument_reporter_boolean.init': boolean;
     },
     behavior: {
         redirectURL: boolean;
@@ -57,7 +59,9 @@ const defaultSettings: Settings = {
         'vm.exports.ScriptTreeGenerator.prototype.descendInput': true,
         'vm.ccExtensionManager.getExtensionLoadOrder': true,
         'blocks.Procedures.addCreateButton_': true,
-        'blocks.getMainWorkspace().toolboxCategoryCallbacks_': true,
+        'blocks.getMainWorkspace().toolboxCategoryCallbacks_.PROCEDURE': true,
+        'blocks.getMainWorkspace().toolboxCategoryCallbacks.PROCEDURE': true,
+        'blocks.Blocks.argument_reporter_boolean.init': true,
         'vm.runtime._convertButtonForScratchBlocks': true,
         'vm.runtime._convertForScratchBlocks': true
     },

@@ -25,25 +25,13 @@ export function injectToolbox (xmlList: HTMLElement[], workspace: DucktypedBlock
     const sideloadButton = document.createElement('button');
     sideloadButton.setAttribute('text', format({
         id: 'eureka.sideload',
-        default: 'Sideload from URL'
+        default: 'Sideload'
     }));
-    sideloadButton.setAttribute('callbackKey', 'EUREKA_SIDELOAD_FROM_URL');
-    workspace.registerButtonCallback('EUREKA_SIDELOAD_FROM_URL', () => {
+    sideloadButton.setAttribute('callbackKey', 'EUREKA_SIDELOAD');
+    workspace.registerButtonCallback('EUREKA_SIDELOAD', () => {
 
     });
     xmlList.push(sideloadButton);
-
-    // Add load from file button
-    const sideloadTempButton = document.createElement('button');
-    sideloadTempButton.setAttribute('text', format({
-        id: 'eureka.sideloadFromFile',
-        default: 'Sideload from File'
-    }));
-    sideloadTempButton.setAttribute('callbackKey', 'EUREKA_SIDELOAD_FROM_FILE');
-    workspace.registerButtonCallback('EUREKA_SIDELOAD_FROM_FILE', () => {
-        
-    });
-    xmlList.push(sideloadTempButton);
 
     // Add eureka detection
     const mutation = document.createElement('mutation');

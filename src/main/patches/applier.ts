@@ -27,18 +27,32 @@ export function applyPatches (vm: DucktypedVM, blocks: DucktypedScratchBlocks | 
     // Add eureka's toolbox stuffs
     if (blocks) {
         if (settings.mixins['blocks.Procedures.addCreateButton_']) {
-            MixinApplicator.applyTo(
-                blocks.Procedures,
-                {
-                    addCreateButton_ (originalMethod, workspace, xmlList) {
-                        originalMethod?.(workspace, xmlList);
+            if (blocks.__esModule) {
+                log.info('Modern blockly detected');
+                if (settings.mixins['blocks.getMainWorkspace().toolboxCategoryCallbacks.PROCEDURE']) {
+                    const toolboxCallbacks = blocks?.getMainWorkspace()?.toolboxCategoryCallbacks;
+                    const originalCallback = toolboxCallbacks.get('PROCEDURE');
+                    toolboxCallbacks.set('PROCEDURE', function (workspace) {
+                        const xmlList = originalCallback.call(this, workspace);
                         injectToolbox(xmlList, workspace);
-                    }
+
+                        return xmlList;
+                    });
                 }
-            );
+            } else {
+                MixinApplicator.applyTo(
+                    blocks.Procedures,
+                    {
+                        addCreateButton_(originalMethod, workspace, xmlList) {
+                            originalMethod?.(workspace, xmlList);
+                            injectToolbox(xmlList, workspace);
+                        }
+                    }
+                );
+            }
         }
-    } else if (settings.mixins['blocks.getMainWorkspace().toolboxCategoryCallbacks_']) {
-        const toolboxCallbacks = window.Blockly?.getMainWorkspace()?.toolboxCategoryCallbacks_;
+    } else if (settings.mixins['blocks.getMainWorkspace().toolboxCategoryCallbacks_.PROCEDURE']) {
+        const toolboxCallbacks = globalThis.Blockly?.getMainWorkspace()?.toolboxCategoryCallbacks_;
         MixinApplicator.applyTo(
             toolboxCallbacks,
             {
@@ -52,7 +66,27 @@ export function applyPatches (vm: DucktypedVM, blocks: DucktypedScratchBlocks | 
         );
     }
 
-    const workspace = (blocks ?? globalThis.Blockly).getMainWorkspace();
+    if (settings.mixins['blocks.Blocks.argument_reporter_boolean.init']) {
+        MixinApplicator.applyTo(
+            blocks.Blocks.argument_reporter_boolean,
+            {
+                init (originalMethod) {
+                    originalMethod();
+                    queueMicrotask(() => {
+                        if (this.getFieldValue('VALUE') === '🧐 Eureka?' && !(this.dragStrategy instanceof blocks.dragging.BlockDragStrategy) && !this.isInFlyout) {
+                            this.setDragStrategy(new blocks.dragging.BlockDragStrategy(this));
+                            this.dragStrategy.block?.dispose();
+                        }
+                    });
+                }
+            }
+        );
+    }
+
+    const workspace = (blocks ?? globalThis.Blockly).getMainWorkspace?.();
+    if (!workspace) {
+        log.error('Failed to refresh toolbox: workspace is undefined');
+    }
     workspace.getToolbox().refreshSelection();
     workspace.toolboxRefreshEnabled_ = true;
 

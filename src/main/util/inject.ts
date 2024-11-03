@@ -1,5 +1,3 @@
-import log from './console';
-
 type MixinMethodWrapper<T extends ((...args: any) => any)> =
     (originalMethod: T, ...args: Parameters<T>) => ReturnType<T>;
 
