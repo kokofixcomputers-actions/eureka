@@ -21,6 +21,7 @@ interface Settings {
         'vm.ccExtensionManager.getExtensionLoadOrder': boolean;
         'blocks.Procedures.addCreateButton_': boolean;
         'blocks.getMainWorkspace().toolboxCategoryCallbacks_.PROCEDURE': boolean;
+        'blocks.WorkspaceSvg.prototype.registerToolboxCategoryCallback': boolean;
         'blocks.getMainWorkspace().toolboxCategoryCallbacks.PROCEDURE': boolean;
         'vm.runtime._convertForScratchBlocks': boolean;
         'vm.runtime._convertButtonForScratchBlocks': boolean;
@@ -60,6 +61,7 @@ const defaultSettings: Settings = {
         'vm.ccExtensionManager.getExtensionLoadOrder': true,
         'blocks.Procedures.addCreateButton_': true,
         'blocks.getMainWorkspace().toolboxCategoryCallbacks_.PROCEDURE': true,
+        'blocks.WorkspaceSvg.prototype.registerToolboxCategoryCallback': true,
         'blocks.getMainWorkspace().toolboxCategoryCallbacks.PROCEDURE': true,
         'blocks.Blocks.argument_reporter_boolean.init': true,
         'vm.runtime._convertButtonForScratchBlocks': true,

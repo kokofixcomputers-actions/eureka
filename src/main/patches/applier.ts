@@ -29,6 +29,8 @@ export function applyPatches (vm: DucktypedVM, blocks: DucktypedScratchBlocks | 
         if (settings.mixins['blocks.Procedures.addCreateButton_']) {
             if (blocks.__esModule) {
                 log.info('Modern blockly detected');
+
+                // Replace initial category callback
                 if (settings.mixins['blocks.getMainWorkspace().toolboxCategoryCallbacks.PROCEDURE']) {
                     const toolboxCallbacks = blocks?.getMainWorkspace()?.toolboxCategoryCallbacks;
                     const originalCallback = toolboxCallbacks.get('PROCEDURE');
@@ -38,6 +40,28 @@ export function applyPatches (vm: DucktypedVM, blocks: DucktypedScratchBlocks | 
 
                         return xmlList;
                     });
+                }
+
+                // Hijack register method
+                if (settings.mixins['blocks.WorkspaceSvg.prototype.registerToolboxCategoryCallback']) {
+                    MixinApplicator.applyTo(
+                        blocks.WorkspaceSvg.prototype,
+                        {
+                            registerToolboxCategoryCallback (originalMethod, key, callback) {
+                                if (key === 'PROCEDURE') {
+                                    const originalCallback = callback;
+                                    callback = function (workspace) {
+                                        const xmlList = originalCallback.call(this, workspace);
+                                        injectToolbox(xmlList, workspace);
+
+                                        return xmlList;
+                                    };
+                                }
+
+                                return originalMethod(key, callback);
+                            },
+                        }
+                    );
                 }
             } else {
                 MixinApplicator.applyTo(

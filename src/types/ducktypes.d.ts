@@ -66,6 +66,7 @@ interface DucktypedBlocksWorkspace {
     }
     toolboxCategoryCallbacks?: Map<string, (workspace: DucktypedBlocksWorkspace) => void>;
     registerButtonCallback (callbackKey: string, callback: () => void): void;
+    registerToolboxCategoryCallback (key: string, func: (ws: DucktypedBlocksWorkspace) => any): void;
     getToolbox(): DucktypedToolbox;
     toolboxRefreshEnabled_: boolean;
 }
@@ -83,5 +84,10 @@ interface DucktypedScratchBlocks {
         BlockDragStrategy (blocks: unknown): void;
     }
     getMainWorkspace (): DucktypedBlocksWorkspace;
+    WorkspaceSvg: Ctor<DucktypedBlocksWorkspace>;
     __esModule?: boolean;
+}
+
+interface Ctor<T> {
+    new (): T;
 }
