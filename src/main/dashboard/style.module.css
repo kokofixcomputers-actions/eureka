@@ -1,10 +1,105 @@
 /* Preflights are needed for default values of variables */
 @unocss preflights;
 
-.count {
-  @apply text-orange-500;
+.wrapper {
+  @apply absolute fixed flex flex-col bg-[var(--eureka-transparent-accent)] h-full left-0 top-0 w-full z-11726;
 }
 
-.plus1 {
-  @apply float-right;
+.wrapper * {
+  @apply box-sizing-[border-box];
+}
+
+.modal {
+  @apply rounded-[var(--eureka-form-radius)] max-w-150 w-full m-auto;
+  border: 4px solid var(--eureka-ui-white-transparent);
+}
+
+.header {
+  @apply flex items-center justify-between p-x-2 h-[var(--eureka-library-header-height)] rounded-t-[var(--eureka-form-radius)] bg-[var(--eureka-accent)];
+}
+
+.header .placeholder {
+  @apply w-8 h-8;
+}
+
+.header span {
+  @apply text-[var(--eureka-ui-white)] font-500;
+}
+
+.header button {
+  @apply p-[var(--eureka-space)] rounded-full bg-[var(--eureka-ui-white-transparent)] hover:scale-125 transition-transform outline-none border-none w-8 h-8 flex items-center justify-center;
+}
+
+.header button img {
+  @apply w-3.5 h-3.5 rotate-45;
+}
+
+.body {
+  @apply p-[calc(var(--eureka-space)*2)] bg-[var(--eureka-ui-white)] rounded-b-[var(--eureka-form-radius)] flex flex-col max-h-80vh overflow-y-auto;
+}
+
+.tabs {
+  @apply flex gap-2 mb-4 border-b border-gray-200;
+}
+
+.tab {
+  @apply px-4 py-2 text-[var(--eureka-text-primary)] cursor-pointer hover:text-[var(--eureka-accent)];
+}
+
+.tab.active {
+  @apply text-[var(--eureka-accent)];
+  border-bottom: 2px solid
+}
+
+.loaderTabs {
+  @apply flex gap-2 mb-4;
+}
+
+.loaderTab {
+  @apply px-4 py-2 rounded-t-md cursor-pointer bg-gray-100 text-[var(--eureka-text-primary)];
+}
+
+.loaderTab.active {
+  @apply bg-[var(--eureka-accent)] text-white;
+}
+
+.button {
+  @apply cursor-pointer px-4 py-2 rounded-md bg-[var(--eureka-accent)] outline-none text-white hover:opacity-90 w-fit;
+  border: 1px solid var(--eureka-secondary);
+}
+
+.input {
+  @apply w-full px-3 py-2 border rounded-md focus:outline-none hover:border-[var(--eureka-accent)] focus:border-[var(--eureka-accent)] border-[var(--eureka-black-transparent)] transition-all;
+}
+
+.loaderItems {
+  @apply gap-4 flex flex-col;
+}
+
+.input:focus {
+  box-shadow: 0 0 0 0.25rem var(--eureka-transparent-accent)
+}
+
+.input::placeholder {
+  @apply text-[var(--eureka-text-primary)];
+}
+
+.textarea {
+  @apply w-full px-3 py-2 border rounded-md focus:outline-none border-[var(--eureka-black-transparent)] focus:border-[var(--eureka-accent)] hover:border-[var(--eureka-accent)] min-h-[100px] transition-all;
+}
+
+.textarea::placeholder {
+  @apply text-[var(--eureka-text-primary)];
+}
+
+.textarea:focus {
+  box-shadow: 0 0 0 0.25rem var(--eureka-transparent-accent);
+}
+
+.loadedExtensions {
+  @apply mb-4;
+}
+
+.loaderForm {
+  @apply mt-4;
 }

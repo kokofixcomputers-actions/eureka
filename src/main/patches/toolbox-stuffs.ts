@@ -1,4 +1,6 @@
 import format from 'format-message';
+import { eureka } from '../ctx';
+import { DashboardStatus } from '../dashboard/app';
 
 export function injectToolbox (xmlList: HTMLElement[], workspace: DucktypedBlocksWorkspace) {
     // Add separator and label
@@ -17,21 +19,9 @@ export function injectToolbox (xmlList: HTMLElement[], workspace: DucktypedBlock
     }));
     dashboardButton.setAttribute('callbackKey', 'EUREKA_FRONTEND');
     workspace.registerButtonCallback('EUREKA_FRONTEND', () => {
-        
+        eureka.openDashboard(DashboardStatus.LOADER);
     });
     xmlList.push(dashboardButton);
-
-    // Add load from url button
-    const sideloadButton = document.createElement('button');
-    sideloadButton.setAttribute('text', format({
-        id: 'eureka.sideload',
-        default: 'Sideload'
-    }));
-    sideloadButton.setAttribute('callbackKey', 'EUREKA_SIDELOAD');
-    workspace.registerButtonCallback('EUREKA_SIDELOAD', () => {
-
-    });
-    xmlList.push(sideloadButton);
 
     // Add eureka detection
     const mutation = document.createElement('mutation');

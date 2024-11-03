@@ -43,7 +43,7 @@ export function applyPatches (vm: DucktypedVM, blocks: DucktypedScratchBlocks | 
                 MixinApplicator.applyTo(
                     blocks.Procedures,
                     {
-                        addCreateButton_(originalMethod, workspace, xmlList) {
+                        addCreateButton_ (originalMethod, workspace, xmlList) {
                             originalMethod?.(workspace, xmlList);
                             injectToolbox(xmlList, workspace);
                         }

@@ -51,6 +51,7 @@ interface DucktypedVM {
         _refreshExtensionPrimitives (info: ExtensionMetadata): void;
         _convertForScratchBlocks (info: ExtensionBlockMetadata, categoryInfo: CategoryInfo): ConvertedBlockInfo;
         _convertButtonForScratchBlocks (info: ExtensionBlockMetadata, categoryInfo: CategoryInfo): ConvertedBlockInfo;
+        getEditingTarget (): any;
     }
     toJSON(optTargetId?: string): string;
     deserializeProject(projectJSON: string, zip): Promise<void>;

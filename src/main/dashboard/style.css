@@ -1,2 +1,19 @@
 /* global css */
 /* Note: might conflict with existing styles if not in shadow DOM */
+
+:root {
+    --eureka-accent: rgb(133, 92, 214);
+    --eureka-secondary: rgb(115, 81, 183);
+    --eureka-transparent-accent: rgba(133, 92, 214, 0.5);
+    --eureka-space: 0.5rem;
+    --eureka-form-radius: calc(var(--eureka-space) / 2);
+    --eureka-text-primary: hsla(225, 15%, 40%, 1);
+    --eureka-black-transparent: hsla(0, 0%, 0%, 0.15);
+    --eureka-ui-white: hsla(0, 100%, 100%, 1);
+    --eureka-ui-white-dim: hsla(0, 100%, 100%, 0.75);
+    --eureka-library-header-height: 3.125rem;
+    --eureka-ui-transparent: hsla(0, 100%, 100%, 0);
+    --eureka-ui-white-transparent: hsla(0, 100%, 100%, 0.25);
+    --eureka-orange: #FF8C1A;
+    --eureka-orange-dark: #EC7C1A;
+}
