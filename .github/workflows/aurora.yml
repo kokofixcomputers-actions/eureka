@@ -35,4 +35,4 @@ jobs:
           prerelease: true
           title: "Aurora"
           files: |
-            dist/eureka-loader.user.js
+            dist/eureka.user.js
