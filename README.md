@@ -46,8 +46,6 @@ Eureka is a userscript which can load 3rd-party extensions in any Scratch-based 
 
 Eureka is the glue that makes it all work by independently implementing a Scratch extension loading system in a non-sandboxed environment. But Eureka doesn't completely eliminate the problems that come with different environments - as a prime example, the extension tries to read either a vm or a blocks instance. If your extension doesn't work, check to see if the extension modifies something specific to the Scratch mod, and try to report it to the extension's author.
 
-Translated with DeepL.com (free version)
-
 # 📦 Installation
 
 1. Install UserScript Manager like Tampermonkey or Violentmonkey.
