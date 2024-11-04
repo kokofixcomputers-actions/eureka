@@ -19,9 +19,9 @@ jobs:
         with:
           node-version: 20.x
       - name: Install
-        run: pnpm install
+        run: yarn install --frozen-lockfile
       - name: Build
-        run: pnpm run build
+        run: yarn run build
       - name: Upload Canary Userscript
         uses: actions/upload-artifact@v3
         with:
