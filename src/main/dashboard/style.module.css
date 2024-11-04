@@ -119,3 +119,64 @@
 .loaderForm {
   @apply mt-4;
 }
+
+.switch {
+  width: 3rem;
+  height: 1.5rem;
+  border-radius: 1.5rem;
+  border: solid var(--eureka-black-transparent) 1px;
+  display: inline-block;
+  transition: background-color 0.3s;
+  cursor: pointer;
+  position: relative;
+}
+
+.switch .true {
+  background-color: var(--eureka-primary);
+}
+
+.switch .false {
+  background-color: #e6e6e6;
+}
+
+.switch .disabled {
+  background-color: #7c7c7c;
+}
+
+.slider {
+  @apply absolute cursor-pointer top-0 left-0 right-0 bottom-0 bg-gray-200 transition-all rounded-full;
+}
+
+.slider::before {
+  content: "";
+  @apply absolute h-[1.25rem] w-[1.25rem] left-[0.125rem] bottom-[0.125rem] bg-white transition-transform rounded-full;
+}
+
+.switch.true .slider {
+  background-color: var(--eureka-accent);
+}
+
+.switch.true .slider::before {
+  transform: translateX(1.5rem);
+}
+
+.switch.disabled .slider {
+  background-color: #7c7c7c;
+  cursor: not-allowed;
+}
+
+.dummyInput {
+  display: none;
+}
+
+.settings {
+  @apply flex flex-col;
+}
+
+.settings .label {
+  @apply font-bold text-[var(--eureka-text-primary)] pb-2;
+}
+
+.settings .settingsItem {
+  @apply flex items-center pl-2 py-4 justify-between font-size-sm color-[var(--eureka-text-primary)] p-2 hover:bg-gray-300;
+}

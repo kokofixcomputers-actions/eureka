@@ -8,6 +8,7 @@ import globalCss from './style.css';
 import styles, { stylesheet } from './style.module.css';
 import formatMessage from 'format-message';
 import { loadedExtensions } from '../middleware/index';
+import settingsAgent from '../util/settings';
 
 export enum DashboardStatus {
     NONE,
@@ -17,15 +18,23 @@ export enum DashboardStatus {
 
 let setModalStatus: Setter<DashboardStatus>;
 
-type Tab = {
+interface Tab {
   id: DashboardStatus;
   label: string;
-};
+}
+
+interface SwitchProps {
+  value?: boolean;
+  disabled?: boolean;
+  onChange: (value: boolean) => void;
+}
 
 type LoaderType = 'URL' | 'Code' | 'File';
 
+const settings = settingsAgent.getSettings();
+
 function FormattedMessage (props: { id: string, default: string, values?: Record<string, string> }) {
-  return <>{formatMessage({ id: props.id, default: '' }, props.values)}</>;
+  return <>{formatMessage({ id: props.id, default: props.default }, props.values)}</>;
 }
 
 function TabNav(props: { tabs: Tab[], active: DashboardStatus, onChange: (tab: DashboardStatus) => void }) {
@@ -43,8 +52,42 @@ function TabNav(props: { tabs: Tab[], active: DashboardStatus, onChange: (tab: D
   );
 }
 
+function classNames(...classes: (string | null | undefined)[]): string {
+  return classes.filter(Boolean).join(' ');
+}
+
 function stringToDataURL (str: string) {
   return `data:text/plain;base64,${btoa(str)}`;
+}
+
+function SwitchComponent (props: SwitchProps) {
+  const [value, setValue] = createSignal(props.value ?? false);
+
+  const handleClick = () => {
+    if (!props.disabled) {
+      props.onChange(!value());
+      setValue(!value());
+    }
+  };
+
+  const handleKeyDown = (event: KeyboardEvent) => {
+    if (event.key === 'Enter' && !props.disabled) {
+      setValue(!value());
+      props.onChange(!value());
+      event.stopPropagation();
+    }
+  };
+
+  return (
+    <div
+      class={classNames(styles.switch, value() ? styles.true : styles.false, props.disabled ? styles.disabled : null)}
+      onClick={handleClick}
+      onKeyDown={handleKeyDown}
+    >
+      <div class={classNames(styles.slider, value() ? styles.true : styles.false, props.disabled ? styles.disabled : null)} />
+      <input class={styles.dummyInput} inputMode='none' />
+    </div>
+  );
 }
 
 function LoaderForm() {
@@ -102,6 +145,7 @@ function LoaderForm() {
               type="file"
               accept=".js"
               class={styles.input}
+              placeholder={formatMessage({id: 'eureka.loader.file.placeholder', default: 'Choose a file'})}
             />
           </Match>
         </Switch>
@@ -156,6 +200,7 @@ function LoadedExtensions() {
 
 function Dashboard() {
   const [status, setStatus] = createSignal<DashboardStatus>(DashboardStatus.NONE);
+  const [wrappedSettings, setWrappedSettings] = createSignal(settings);
   const tabs: Tab[] = [
     { id: DashboardStatus.LOADER, label: formatMessage({id: 'eureka.dashboard.loader', default: 'Loader'}) },
     { id: DashboardStatus.SETTINGS, label: formatMessage({id: 'eureka.dashboard.settings', default: 'Settings'}) },
@@ -163,6 +208,12 @@ function Dashboard() {
 
   createEffect(() => {
     setModalStatus = setStatus;
+  });
+
+  createEffect(() => {
+    settingsAgent.subscribe(() => {
+      setWrappedSettings(settingsAgent.getSettings());
+    });
   });
 
   return (
@@ -196,7 +247,172 @@ function Dashboard() {
               </Match>
               <Match when={status() === DashboardStatus.SETTINGS}>
                 <div class={styles.settings}>
-                  <p>Settings go here.</p>
+                  <span class={styles.label}>
+                    <FormattedMessage id='eureka.settings.behavior' default='Behavior' />
+                  </span>
+                  <div class={styles.settingsItem}>
+                    <span>
+                      <FormattedMessage id='eureka.settings.redirectURL' default='Redirect all URL loading requests to Eureka' />
+                    </span>
+                      <SwitchComponent value={wrappedSettings().behavior.redirectURL} onChange={(value) => {
+                        settings.behavior.redirectURL = value;
+                      }} disabled={wrappedSettings().behavior.headless} />
+                  </div>
+                  <div class={styles.settingsItem}>
+                    <span>
+                      <FormattedMessage id='eureka.settings.redirectDeclared' default='Redirect pre-declared requests to Eureka' />
+                    </span>
+                      <SwitchComponent value={wrappedSettings().behavior.redirectDeclared} onChange={(value) => {
+                        settings.behavior.redirectDeclared = value;
+                      }} disabled={wrappedSettings().behavior.headless} />
+                  </div>
+                  <div class={styles.settingsItem}>
+                    <span>
+                      <FormattedMessage id='eureka.settings.exposeCtx' default={`Expose Eureka's global context`} />
+                    </span>
+                    <SwitchComponent value={wrappedSettings().behavior.exposeCtx} onChange={(value) => {
+                      settings.behavior.exposeCtx = value;
+                    }} />
+                  </div>
+                  <div class={styles.settingsItem}>
+                    <span>
+                      <FormattedMessage id='eureka.settings.headless' default={`Skip applying patches`} />
+                    </span>
+                    <SwitchComponent value={wrappedSettings().behavior.headless} onChange={(value) => {
+                      settings.behavior.headless = value;
+                    }} />
+                  </div>
+                  <span class={styles.label}>
+                    <FormattedMessage id='eureka.settings.mixins' default='Mixins' />
+                  </span>
+                  <div class={styles.settingsItem}>
+                    <span>
+                      <FormattedMessage id='eureka.settings.vm.extensionManager.loadExtensionURL' default='vm.extensionManager.loadExtensionURL' />
+                    </span>
+                    <SwitchComponent value={wrappedSettings().mixins['vm.extensionManager.loadExtensionURL']} onChange={(value) => {
+                      settings.mixins['vm.extensionManager.loadExtensionURL'] = value;
+                    }} />
+                  </div>
+                  <div class={styles.settingsItem}>
+                    <span>
+                      <FormattedMessage id='eureka.settings.vm.extensionManager.refreshBlocks' default='vm.extensionManager.refreshBlocks' />
+                    </span>
+                    <SwitchComponent value={wrappedSettings().mixins['vm.extensionManager.refreshBlocks']} onChange={(value) => {
+                      settings.mixins['vm.extensionManager.refreshBlocks'] = value;
+                    }} />
+                  </div>
+                  <div class={styles.settingsItem}>
+                    <span>
+                      <FormattedMessage id='eureka.settings.vm.toJSON' default='vm.toJSON' />
+                    </span>
+                    <SwitchComponent value={wrappedSettings().mixins['vm.toJSON']} onChange={(value) => {
+                      settings.mixins['vm.toJSON'] = value;
+                    }} />
+                  </div>
+                  <div class={styles.settingsItem}>
+                    <span>
+                      <FormattedMessage id='eureka.settings.vm.deserializeProject' default='vm.deserializeProject' />
+                    </span>
+                    <SwitchComponent value={wrappedSettings().mixins['vm.deserializeProject']} onChange={(value) => {
+                      settings.mixins['vm.deserializeProject'] = value;
+                    }} />
+                  </div>
+                  <div class={styles.settingsItem}>
+                    <span>
+                      <FormattedMessage id='eureka.settings.vm._loadExtensions' default='vm._loadExtensions' />
+                    </span>
+                    <SwitchComponent value={wrappedSettings().mixins['vm._loadExtensions']} onChange={(value) => {
+                      settings.mixins['vm._loadExtensions'] = value;
+                    }} />
+                  </div>
+                  <div class={styles.settingsItem}>
+                    <span>
+                      <FormattedMessage id='eureka.settings.vm.setLocale' default='vm.setLocale' />
+                    </span>
+                    <SwitchComponent value={wrappedSettings().mixins['vm.setLocale']} onChange={(value) => {
+                      settings.mixins['vm.setLocale'] = value;
+                    }} />
+                  </div>
+                  <div class={styles.settingsItem}>
+                    <span>
+                      <FormattedMessage id='eureka.settings.vm.runtime._primitives.argument_reporter_boolean' default='vm.runtime._primitives.argument_reporter_boolean' />
+                    </span>
+                    <SwitchComponent value={wrappedSettings().mixins['vm.runtime._primitives.argument_reporter_boolean']} onChange={(value) => {
+                      settings.mixins['vm.runtime._primitives.argument_reporter_boolean'] = value;
+                    }} />
+                  </div>
+                  <div class={styles.settingsItem}>
+                    <span>
+                      <FormattedMessage id='eureka.settings.vm.exports.ScriptTreeGenerator.prototype.descendInput' default='vm.exports.ScriptTreeGenerator.prototype.descendInput' />
+                    </span>
+                    <SwitchComponent value={wrappedSettings().mixins['vm.exports.ScriptTreeGenerator.prototype.descendInput']} onChange={(value) => {
+                      settings.mixins['vm.exports.ScriptTreeGenerator.prototype.descendInput'] = value;
+                    }} />
+                  </div>
+                  <div class={styles.settingsItem}>
+                    <span>
+                      <FormattedMessage id='eureka.settings.vm.ccExtensionManager.getExtensionLoadOrder' default='vm.ccExtensionManager.getExtensionLoadOrder' />
+                    </span>
+                    <SwitchComponent value={wrappedSettings().mixins['vm.ccExtensionManager.getExtensionLoadOrder']} onChange={(value) => {
+                      settings.mixins['vm.ccExtensionManager.getExtensionLoadOrder'] = value;
+                    }} />
+                  </div>
+                  <div class={styles.settingsItem}>
+                    <span>
+                      <FormattedMessage id='eureka.settings.blocks.Procedures.addCreateButton_' default='blocks.Procedures.addCreateButton_' />
+                    </span>
+                    <SwitchComponent value={wrappedSettings().mixins['blocks.Procedures.addCreateButton_']} onChange={(value) => {
+                      settings.mixins['blocks.Procedures.addCreateButton_'] = value;
+                    }} />
+                  </div>
+                  <div class={styles.settingsItem}>
+                    <span>
+                      <FormattedMessage id='eureka.settings.blocks.getMainWorkspace().toolboxCategoryCallbacks_.PROCEDURE' default='blocks.getMainWorkspace().toolboxCategoryCallbacks_.PROCEDURE' />
+                    </span>
+                    <SwitchComponent value={wrappedSettings().mixins['blocks.getMainWorkspace().toolboxCategoryCallbacks_.PROCEDURE']} onChange={(value) => {
+                      settings.mixins['blocks.getMainWorkspace().toolboxCategoryCallbacks_.PROCEDURE'] = value;
+                    }} />
+                  </div>
+                  <div class={styles.settingsItem}>
+                    <span>
+                      <FormattedMessage id='eureka.settings.blocks.WorkspaceSvg.prototype.registerToolboxCategoryCallback' default='blocks.WorkspaceSvg.prototype.registerToolboxCategoryCallback' />
+                    </span>
+                    <SwitchComponent value={wrappedSettings().mixins['blocks.WorkspaceSvg.prototype.registerToolboxCategoryCallback']} onChange={(value) => {
+                      settings.mixins['blocks.WorkspaceSvg.prototype.registerToolboxCategoryCallback'] = value;
+                    }} />
+                  </div>
+                  <div class={styles.settingsItem}>
+                    <span>
+                      <FormattedMessage id='eureka.settings.blocks.getMainWorkspace().toolboxCategoryCallbacks.PROCEDURE' default='blocks.getMainWorkspace().toolboxCategoryCallbacks.PROCEDURE' />
+                    </span>
+                    <SwitchComponent value={wrappedSettings().mixins['blocks.getMainWorkspace().toolboxCategoryCallbacks.PROCEDURE']} onChange={(value) => {
+                      settings.mixins['blocks.getMainWorkspace().toolboxCategoryCallbacks.PROCEDURE'] = value;
+                    }} />
+                  </div>
+                  <div class={styles.settingsItem}>
+                    <span>
+                      <FormattedMessage id='eureka.settings.blocks.Blocks.argument_reporter_boolean.init' default='blocks.Blocks.argument_reporter_boolean.init' />
+                    </span>
+                    <SwitchComponent value={wrappedSettings().mixins['blocks.Blocks.argument_reporter_boolean.init']} onChange={(value) => {
+                      settings.mixins['blocks.Blocks.argument_reporter_boolean.init'] = value;
+                    }} />
+                  </div>
+                  <div class={styles.settingsItem}>
+                    <span>
+                      <FormattedMessage id='eureka.settings.vm.runtime._convertButtonForScratchBlocks' default='vm.runtime._convertButtonForScratchBlocks' />
+                    </span>
+                    <SwitchComponent value={wrappedSettings().mixins['vm.runtime._convertButtonForScratchBlocks']} onChange={(value) => {
+                      settings.mixins['vm.runtime._convertButtonForScratchBlocks'] = value;
+                    }} />
+                  </div>
+                  <div class={styles.settingsItem}>
+                    <span>
+                      <FormattedMessage id='eureka.settings.vm.runtime._convertForScratchBlocks' default='vm.runtime._convertForScratchBlocks' />
+                    </span>
+                    <SwitchComponent value={wrappedSettings().mixins['vm.runtime._convertForScratchBlocks']} onChange={(value) => {
+                      settings.mixins['vm.runtime._convertForScratchBlocks'] = value;
+                    }} />
+                  </div>
                 </div>
               </Match>
             </Switch>
