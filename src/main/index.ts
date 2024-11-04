@@ -8,6 +8,7 @@ import './util/l10n';
 import formatMessage from 'format-message';
 import { eureka } from './ctx';
 import { applyPatches } from './patches/applier';
+import { setLocale } from './util/l10n';
 
 log.info(
     formatMessage({
@@ -23,6 +24,7 @@ const settings = settingsAgent.getSettings();
     if (settings.trap.vm) {
         try {
             const vm = eureka.vm = await getVMInstance();
+            setLocale(vm.getLocale());
             if (settings.trap.blocks) {
                 try {
                     eureka.blocks = await getScratchBlocksInstance(vm);
@@ -36,7 +38,16 @@ const settings = settingsAgent.getSettings();
                 }
             }
 
-            applyPatches(vm, eureka.blocks, eureka);
+            if (settings.behavior.headless) {
+                log.warn(
+                    formatMessage({
+                        id: 'eureka.headlessTips',
+                        default: 'Headless mode on, stop apply patches.'
+                    })
+                );
+            } else {
+                applyPatches(vm, eureka.blocks, eureka);
+            }
         } catch (e) {
             log.error(
                 formatMessage({

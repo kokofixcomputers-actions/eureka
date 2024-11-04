@@ -43,16 +43,16 @@
 }
 
 .tab {
-  @apply px-4 py-2 text-[var(--eureka-text-primary)] cursor-pointer hover:text-[var(--eureka-accent)];
+  @apply px-4 py-2 select-none text-[var(--eureka-text-primary)] cursor-pointer hover:text-[var(--eureka-accent)];
 }
 
 .tab.active {
   @apply text-[var(--eureka-accent)];
-  border-bottom: 2px solid
+  border-bottom: 2px solid;
 }
 
 .loaderTabs {
-  @apply flex gap-2 mb-4;
+  @apply flex gap-2 mb-4 select-none items-center;
 }
 
 .loaderTab {
@@ -66,6 +66,10 @@
 .button {
   @apply cursor-pointer px-4 py-2 rounded-md bg-[var(--eureka-accent)] outline-none text-white hover:opacity-90 w-fit;
   border: 1px solid var(--eureka-secondary);
+}
+
+.button:disabled {
+  @apply cursor-not-allowed bg-[var(--eureka-transparent-accent)] hover:opacity-100;
 }
 
 .input {
@@ -98,6 +102,18 @@
 
 .loadedExtensions {
   @apply mb-4;
+}
+
+.extensionItem {
+  @apply flex flex-col p-2 border-b border-gray-200;
+}
+
+.extensionItem .name {
+  @apply font-bold text-[var(--eureka-text-primary)];
+}
+
+.extensionItem .url {
+  @apply text-sm text-[var(--eureka-text-primary)];
 }
 
 .loaderForm {

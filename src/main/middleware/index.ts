@@ -6,7 +6,7 @@ import log from '../util/console';
 import { getScratchBlocksInstance } from '../trap/blocks';
 import { maybeFormatMessage } from '../util/maybe-format-message';
 
-const loadedExtensions = new Map<string, StandardScratchExtensionClass>();
+export const loadedExtensions = new Map<string, { extension: StandardScratchExtensionClass, info: ExtensionMetadata }>();
 
 interface ExtensionContainer extends HTMLScriptElement {
     Scratch?: ExtendedScratchObject;
@@ -33,7 +33,7 @@ export async function forwardedLoadExtensionURL (url: string) {
             const info = prepareExtensionInfo(extensionObj, extensionObj.getInfo());
             eureka.vm.runtime._registerExtensionPrimitives(info);
 
-            loadedExtensions.set(url, extensionObj);
+            loadedExtensions.set(url, { extension: extensionObj, info });
 
             // Dispose temporary extension container
             URL.revokeObjectURL(src);
@@ -323,7 +323,8 @@ interface ExtendedScratchObject extends BaseScratchObject {
 function parseURL (url: string) {
     try {
         return new URL(url, location.href);
-    } catch (e) {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    } catch (_) {
         return null;
     }
 }
@@ -417,13 +418,16 @@ function createTranslate (vm: DucktypedVM) {
 }
 
 export async function refreshForwardedBlocks () {
-    loadedExtensions.forEach((obj) => {
-        const info = prepareExtensionInfo(obj, obj.getInfo());
+    loadedExtensions.forEach(({ extension }, url) => {
+        const info = prepareExtensionInfo(extension, extension.getInfo());
         eureka.vm.runtime._refreshExtensionPrimitives(info);
+        loadedExtensions.set(url, { extension, info });
     });
 }
 
 eureka.load = (url: string) => {
+    if (loadedExtensions.has(url)) return;
+
     eureka.declaredIds.push(url);
     forwardedLoadExtensionURL(url);
 };

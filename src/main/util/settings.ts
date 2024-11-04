@@ -6,9 +6,6 @@ interface Settings {
         blocks: boolean;
         paper: boolean;
     },
-    mode: {
-        headless: boolean;
-    },
     mixins: {
         'vm.extensionManager.loadExtensionURL': boolean;
         'vm.extensionManager.refreshBlocks': boolean;
@@ -31,6 +28,7 @@ interface Settings {
         redirectURL: boolean;
         redirectDeclared: boolean;
         exposeCtx: boolean;
+        headless: boolean;
     },
     lang: string;
 }
@@ -41,13 +39,11 @@ const defaultSettings: Settings = {
         blocks: true,
         paper: true
     },
-    mode: {
-        headless: false
-    },
     behavior: {
         redirectURL: false,
         redirectDeclared: true,
-        exposeCtx: true
+        exposeCtx: true,
+        headless: false
     },
     mixins: {
         'vm.extensionManager.loadExtensionURL': true,

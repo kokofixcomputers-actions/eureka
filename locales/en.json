@@ -1,1 +1,18 @@
-{}
+{
+    "eureka.loading": "Eureka (Version {version})",
+    "eureka.failedToGetBlocks": "Failed to get ScratchBlocks.",
+    "eureka.failedToGetVM": "Failed to get VM.",
+    "eureka.openDashboard": "Open Dashboard",
+    "eureka.dashboard.loader": "Loader",
+    "eureka.dashboard.settings": "Settings",
+    "eureka.dashboard.close": "Close",
+    "eureka.loader.url": "URL",
+    "eureka.loader.code": "Code",
+    "eureka.loader.file": "File",
+    "eureka.loader.load": "Load Extension",
+    "eureka.dashboard.title": "Eureka Dashboard",
+    "eureka.loader.url.placeholder": "Enter extension URL here",
+    "eureka.loader.code.placeholder": "Paste extension code here",
+    "eureka.loader.file.placeholder": "Choose a file",
+    "eureka.headlessTips": "Headless mode on, stop apply patches."
+}

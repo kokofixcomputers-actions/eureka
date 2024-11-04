@@ -1,0 +1,18 @@
+{
+    "eureka.loading": "Eureka (版本: {version})",
+    "eureka.failedToGetBlocks": "获取 ScratchBlocks 失败",
+    "eureka.failedToGetVM": "获取 VM 失败",
+    "eureka.dashboard.loader": "加载",
+    "eureka.dashboard.settings": "设置",
+    "eureka.openDashboard": "打开仪表盘",
+    "eureka.dashboard.close": "关闭",
+    "eureka.loader.url": "URL",
+    "eureka.loader.code": "代码",
+    "eureka.loader.file": "文件",
+    "eureka.loader.load": "加载扩展",
+    "eureka.dashboard.title": "Eureka 仪表盘",
+    "eureka.loader.url.placeholder": "在此输入扩展 URL",
+    "eureka.loader.code.placeholder": "在此粘贴扩展代码",
+    "eureka.loader.file.placeholder": "选择一个文件",
+    "eureka.headlessTips": "Headless 模式已开启，停止应用补丁"
+}

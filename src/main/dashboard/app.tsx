@@ -6,6 +6,8 @@ import { eureka } from '../ctx';
 import close from './assets/icon--close.svg';
 import globalCss from './style.css';
 import styles, { stylesheet } from './style.module.css';
+import formatMessage from 'format-message';
+import { loadedExtensions } from '../middleware/index';
 
 export enum DashboardStatus {
     NONE,
@@ -21,6 +23,10 @@ type Tab = {
 };
 
 type LoaderType = 'URL' | 'Code' | 'File';
+
+function FormattedMessage (props: { id: string, default: string, values?: Record<string, string> }) {
+  return <>{formatMessage({ id: props.id, default: '' }, props.values)}</>;
+}
 
 function TabNav(props: { tabs: Tab[], active: DashboardStatus, onChange: (tab: DashboardStatus) => void }) {
   return (
@@ -46,8 +52,10 @@ function LoaderForm() {
   const [extensionURL, setURL] = createSignal('');
   const [extensionCode, setCode] = createSignal('');
   const [extensionFile, setFile] = createSignal<File | null>();
+  const [loading, setLoading] = createSignal(false);
 
   function shouldDisable () {
+    if (loading()) return true;
     switch (loaderType()) {
       case 'URL':
         return !extensionURL().trim();
@@ -66,7 +74,7 @@ function LoaderForm() {
             class={`${styles.loaderTab} ${type === loaderType() ? styles.active : ''}`}
             onClick={() => setLoaderType(type)}
           >
-            {type}
+            {formatMessage({id: `eureka.loader.${type.toLowerCase()}`, default: type})}
           </div>
         ))}
       </div>
@@ -76,7 +84,7 @@ function LoaderForm() {
           <Match when={loaderType() === 'URL'}>
             <input
               type="text"
-              placeholder="Extension URL"
+              placeholder={formatMessage({id: 'eureka.loader.url.placeholder', default: 'Enter extension URL here'})}
               onChange={(e) => setURL(e.currentTarget.value)}
               value={extensionURL()}
               class={styles.input}
@@ -84,8 +92,9 @@ function LoaderForm() {
           </Match>
           <Match when={loaderType() === 'Code'}>
             <textarea
-              placeholder="Paste extension code here"
+              placeholder={formatMessage({id: 'eureka.loader.code.placeholder', default: 'Paste extension code here'})}
               class={styles.textarea}
+              onChange={(e) => setCode(e.currentTarget.value)}
             />
           </Match>
           <Match when={loaderType() === 'File'}>
@@ -97,28 +106,50 @@ function LoaderForm() {
           </Match>
         </Switch>
 
-        <button class={styles.button} disabled={shouldDisable()} onClick={() => {
+        <button
+          class={styles.button}
+          disabled={shouldDisable()}
+          onClick={async () => {
           switch (loaderType()) {
             case 'URL':
-              eureka.load(extensionURL());
+              setLoading(true);
+              await eureka.load(extensionURL());
+              setLoading(false);
               break;
             case 'Code':
-              eureka.load(stringToDataURL(extensionCode()));
+              setLoading(true);
+              await eureka.load(stringToDataURL(extensionCode()));
+              setLoading(false);
               break;
             case 'File':
               if (extensionFile()) {
                 const reader = new FileReader();
-                reader.onload = () => {
+                reader.onload = async () => {
+                  setLoading(true);
                   eureka.load(reader.result as string);
+                  setLoading(false);
                 };
                 reader.readAsText(extensionFile());
               }
               break;
           }
         }}>
-          Load Extension
+          <FormattedMessage id="eureka.loader.load" default="Load Extension" />
         </button>
       </div>
+    </div>
+  );
+}
+
+function LoadedExtensions() {
+  return (
+    <div class={styles.loadedExtensions}>
+      {Array.from(loadedExtensions.values()).map(({ info }) => (
+        <div class={styles.extensionItem}>
+          <span class={styles.name}>{info.name}</span>
+          <span class={styles.url}>{info.id}</span>
+        </div>
+      ))}
     </div>
   );
 }
@@ -126,8 +157,8 @@ function LoaderForm() {
 function Dashboard() {
   const [status, setStatus] = createSignal<DashboardStatus>(DashboardStatus.NONE);
   const tabs: Tab[] = [
-    { id: DashboardStatus.LOADER, label: "Loader" },
-    { id: DashboardStatus.SETTINGS, label: "Settings" },
+    { id: DashboardStatus.LOADER, label: formatMessage({id: 'eureka.dashboard.loader', default: 'Loader'}) },
+    { id: DashboardStatus.SETTINGS, label: formatMessage({id: 'eureka.dashboard.settings', default: 'Settings'}) },
   ];
 
   createEffect(() => {
@@ -136,13 +167,19 @@ function Dashboard() {
 
   return (
     <Show when={status() !== DashboardStatus.NONE}>
-      <div class={styles.wrapper}>
-        <div class={styles.modal}>
+      <div class={styles.wrapper} onClick={() => {
+        setStatus(DashboardStatus.NONE);
+      }}>
+        <div class={styles.modal} onClick={(e) => {
+          e.stopPropagation();
+        }}>
           <div class={styles.header}>
             <div class={styles.placeholder} />
-            <span>Eureka Dashboard</span>
+            <span>
+              <FormattedMessage id="eureka.dashboard.title" default="Eureka Dashboard" />
+            </span>
             <button onClick={() => setStatus(DashboardStatus.NONE)}>
-              <img src={close} alt="Close" />
+              <img src={close} alt={formatMessage({id: 'eureka.dashboard.close', default: "Close"})} />
             </button>
           </div>
           <div class={styles.body}>
@@ -155,9 +192,7 @@ function Dashboard() {
             <Switch>
               <Match when={status() === DashboardStatus.LOADER}>
                 <LoaderForm />
-                <div class={styles.loadedExtensions}>
-                  {/* Loaded extensions will go here */}
-                </div>
+                <LoadedExtensions />
               </Match>
               <Match when={status() === DashboardStatus.SETTINGS}>
                 <div class={styles.settings}>
