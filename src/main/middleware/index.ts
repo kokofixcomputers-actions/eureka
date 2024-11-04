@@ -6,6 +6,8 @@ import log from '../util/console';
 import { getScratchBlocksInstance } from '../trap/blocks';
 import { maybeFormatMessage } from '../util/maybe-format-message';
 
+export const idToURLMapping = new Map<string, string>();
+
 export const loadedExtensions = new Map<string, { extension: StandardScratchExtensionClass, info: ExtensionMetadata }>();
 
 interface ExtensionContainer extends HTMLScriptElement {
@@ -22,6 +24,10 @@ export const predefinedCallbackKeys = [
 ];
 
 export async function forwardedLoadExtensionURL (url: string) {
+    if (idToURLMapping.has(url)) {
+        url = idToURLMapping.get(url)!;
+    }
+
     const res = await fetch(url, {
         cache: 'no-cache'
     });

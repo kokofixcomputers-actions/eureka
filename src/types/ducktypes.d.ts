@@ -56,8 +56,8 @@ interface DucktypedVM {
         getTargetForStage (): any;
     }
     toJSON(optTargetId?: string): string;
-    deserializeProject(projectJSON: string, zip): Promise<void>;
-    _loadExtensions?(extensionIDs: string[], extensionURLs: Map<string, string>): Promise<void[]>;
+    deserializeProject(projectJSON: Record<string, unknown>, zip): Promise<void>;
+    _loadExtensions?(extensionIDs: Set<string>, extensionURLs: Map<string, string>): Promise<void[]>;
     setLocale(locale: string, messages: Record<string, string>): Promise<void>;
     getLocale(): Locales;
 }

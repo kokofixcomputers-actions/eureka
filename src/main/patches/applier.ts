@@ -2,13 +2,27 @@ import log from '../util/console';
 import settingsAgent from '../util/settings';
 import { MixinApplicator } from '../util/inject';
 import { injectToolbox } from './toolbox-stuffs';
-import { forwardedLoadExtensionURL, predefinedCallbackKeys, refreshForwardedBlocks } from '../middleware';
+import { forwardedLoadExtensionURL, idToURLMapping, loadedExtensions, predefinedCallbackKeys, refreshForwardedBlocks } from '../middleware';
 import { BlockType } from '../middleware/extension-metadata';
 import xmlEscape from '../util/xml-escape';
 import { maybeFormatMessage } from '../util/maybe-format-message';
 import * as l10n from '../util/l10n';
+import formatMessage from 'format-message';
 
 const settings = settingsAgent.getSettings();
+
+/**
+ * Utility function to determine if a value is a Promise.
+ * @param {*} value Value to check for a Promise.
+ * @return {boolean} True if the value appears to be a Promise.
+ */
+function isPromise (value: unknown) {
+    return (
+        value !== null &&
+        typeof value === 'object' &&
+        typeof (value as Promise<unknown>).then === 'function'
+    );
+}
 
 const checkEureka = (eurekaFlag: string): boolean | null => {
     switch (eurekaFlag) {
@@ -23,6 +37,21 @@ const checkEureka = (eurekaFlag: string): boolean | null => {
     }
     return null;
 };
+
+/**
+ * Get sanitized non-core extension ID for a given sb3 opcode.
+ * Note that this should never return a URL. If in the future the SB3 loader supports loading extensions by URL, this
+ * ID should be used to (for example) look up the extension's full URL from a table in the SB3's JSON.
+ * @param {!string} opcode The opcode to examine for extension.
+ * @return {?string} The extension ID, if it exists and is not a core extension.
+ */
+function getExtensionIdForOpcode (opcode: string) {
+    // Allowed ID characters are those matching the regular expression [\w-]: A-Z, a-z, 0-9, and hyphen ("-").
+    const index = opcode.indexOf('_');
+    const forbiddenSymbols = /[^\w-]/g;
+    const prefix = opcode.substring(0, index).replace(forbiddenSymbols, '-');
+    if (prefix !== '') return prefix;
+}
 
 export function applyPatches (vm: DucktypedVM, blocks: DucktypedScratchBlocks | undefined, ctx: EurekaContext) {
     // Add eureka's toolbox stuffs
@@ -129,6 +158,7 @@ export function applyPatches (vm: DucktypedVM, blocks: DucktypedScratchBlocks | 
                         try {
                             new URL(url);
                             return true;
+                        // eslint-disable-next-line @typescript-eslint/no-unused-vars
                         } catch (e) {
                             return false;
                         }
@@ -163,9 +193,66 @@ export function applyPatches (vm: DucktypedVM, blocks: DucktypedScratchBlocks | 
             {
                 toJSON (originalMethod, optTargetId) {
                     const origJSON = originalMethod?.(optTargetId);
-                    const scratchObj = JSON.parse(origJSON);
+                    const obj = JSON.parse(origJSON);
+                    
+                    // Create a Record of extension's id - extension's url from loadedExtensions
+                    const extensionInfo: Record<string, string> = {};
+                    loadedExtensions.forEach(({info}, url) => {
+                        extensionInfo[info.id] = url;
+                    });
 
-                    return JSON.stringify(scratchObj);
+                    const sideloadIds = Object.keys(extensionInfo);
+
+                    if ('targets' in obj) {
+                        for (const target of obj.targets) {
+                            for (const blockId in target.blocks) {
+                                const block = target.blocks[blockId];
+                                if (!block.opcode) continue;
+                                const extensionId = getExtensionIdForOpcode(block.opcode);
+                                if (!extensionId) continue;
+                                if (sideloadIds.includes(extensionId)) {
+                                    const mutation = block.mutation ? JSON.stringify(block.mutation) : null;
+                                    if (!('mutation' in block)) block.mutation = {};
+                                    block.mutation.proccode = `[📎 Sideload] ${block.opcode}`;
+                                    block.mutation.children = [];
+                                    if (mutation) block.mutation.mutation = mutation;
+                                    block.mutation.tagName = 'mutation';
+
+                                    block.opcode = 'procedures_call';
+                                }
+                            }
+                        }
+                        for (const i in obj.monitors) {
+                            const monitor = obj.monitors[i];
+                            if (!monitor.opcode) continue;
+                            const extensionId = getExtensionIdForOpcode(monitor.opcode);
+                            if (!extensionId) continue;
+                            if (sideloadIds.includes(extensionId)) {
+                                if (!('sideloadMonitors' in obj)) obj.sideloadMonitors = [];
+                                obj.sideloadMonitors.push(monitor);
+                                obj.monitors.splice(i, 1);
+                            }
+                        }
+                    } else {
+                        for (const blockId in obj.blocks) {
+                            const block = obj.blocks[blockId];
+                            if (!block.opcode) continue;
+                            const extensionId = getExtensionIdForOpcode(block.opcode);
+                            if (!extensionId) continue;
+                            if (sideloadIds.includes(extensionId)) {
+                                if (!('mutation' in block)) block.mutation = {};
+                                block.mutation.proccode = `[📎 Sideload] ${block.opcode}`;
+                                block.mutation.children = [];
+                                block.mutation.tagName = 'mutation';
+
+                                block.opcode = 'procedures_call';
+                            }
+                        }
+                    }
+
+                    obj.sideloadExtensionURLs = extensionInfo;
+
+                    return JSON.stringify(obj);
                 },
             }
         );
@@ -176,8 +263,57 @@ export function applyPatches (vm: DucktypedVM, blocks: DucktypedScratchBlocks | 
             vm,
             {
                 deserializeProject (originalMethod, projectJSON, zip) {
-                    originalMethod?.(projectJSON, zip);
-                    return Promise.resolve();
+                    const extensionURLs: Record<string, string> = typeof projectJSON.sideloadExtensionURLs === 'object' ? projectJSON.sideloadExtensionURLs as Record<string, string> : {};
+
+                    if (projectJSON.targets instanceof Array) {
+                        for (const target of projectJSON.targets) {
+                            for (const blockId in target.blocks) {
+                                const block = target.blocks[blockId];
+                                if (block.opcode === 'procedures_call' && block.mutation) {
+                                    if (!block.mutation.proccode.trim().startsWith('[📎 Sideload] ')) {
+                                        continue;
+                                    }
+                                    const originalOpcode = block.mutation.proccode.trim().substring(14);
+                                    const extensionId = getExtensionIdForOpcode(originalOpcode);
+                                    if (!extensionId) {
+                                        log.warn(
+                                            `find a sideload block with an invalid id: ${originalOpcode}, ignored.`
+                                        );
+                                        continue;
+                                    }
+                                    block.opcode = originalOpcode;
+                                    ctx.declaredIds.push(extensionId);
+                                    idToURLMapping.set(extensionId, extensionURLs[extensionId]);
+                                    try {
+                                        const mutation = typeof block.mutation.mutation === 'string' ? JSON.parse(block.mutation.mutation) : null;
+                                        if (mutation) {
+                                            block.mutation = mutation;
+                                        } else delete block.mutation;
+                                    } catch (e) {
+                                        log.error(formatMessage({
+                                            id: 'eureka.errorIgnored',
+                                            default: 'An error occurred while parsing the mutation of a sideload block, ignored. Error: {error}',
+                                        }), e);
+                                        delete block.mutation;
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    if (typeof projectJSON.sideloadExtensionURLs === 'object') {
+                        delete projectJSON.sideloadExtensionURLs;
+                    }
+
+                    if (
+                        projectJSON.sideloadMonitors instanceof Array &&
+                        projectJSON.monitors instanceof Array
+                    ) {
+                        projectJSON.monitors.push(...projectJSON.sideloadMonitors);
+                        delete projectJSON.sideloadMonitors;
+                    }
+
+                    return originalMethod?.(projectJSON, zip);
                 },
             }
         );
@@ -188,9 +324,22 @@ export function applyPatches (vm: DucktypedVM, blocks: DucktypedScratchBlocks | 
             vm,
             {
                 async _loadExtensions (originalMethod, extensionIDs, extensionURLs) {
-                    const result = originalMethod?.(extensionIDs, extensionURLs);
 
-                    return result;
+                    const sideloadExtensionPromises: Promise<void>[] = [];
+                    for (const extensionId of extensionIDs) {
+                        if (extensionId in ctx.declaredIds) {
+                            const loadResult = this.extensionManager.loadExtensionURL(extensionId);
+                            if (isPromise(loadResult)) {
+                                sideloadExtensionPromises.push(loadResult as unknown as Promise<void>);
+                            }
+                            extensionIDs.delete(extensionId);
+                        }
+                    }
+                    return Promise.all([
+                        originalMethod?.(extensionIDs, extensionURLs),
+                        ...sideloadExtensionPromises
+                    ]).then();
+
                 },
             }
         );

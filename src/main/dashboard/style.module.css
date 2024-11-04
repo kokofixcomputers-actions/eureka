@@ -178,5 +178,5 @@
 }
 
 .settings .settingsItem {
-  @apply flex items-center pl-2 py-4 justify-between font-size-sm color-[var(--eureka-text-primary)] p-2 hover:bg-gray-300;
+  @apply flex items-center pl-2 py-4 justify-between font-size-sm color-[var(--eureka-text-primary)] p-2 hover:bg-gray-300 rounded transition-all;
 }
