@@ -1,0 +1,39 @@
+# Automatically build the default branch then release with tag "aurora" and marked as pre-release.
+
+name: Build and Release
+
+on:
+  push:
+    branches:
+      - refactor
+
+jobs:
+  validate:
+    name: Validating Code
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Setup node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20.x
+          cache: 'pnpm'
+      - name: Install
+        run: pnpm install
+      - name: Build
+        run: pnpm run build
+      - name: Upload Canary Userscript
+        uses: actions/upload-artifact@v3
+        with:
+          name: Canary Userscript
+          path: dist/eureka.user.js
+      - name: Create Nightly Release
+        uses: "marvinpinto/action-automatic-releases@latest"
+        with:
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          automatic_release_tag: "aurora"
+          prerelease: true
+          title: "Aurora"
+          files: |
+            dist/eureka-loader.user.js

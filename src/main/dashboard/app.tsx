@@ -427,11 +427,14 @@ const style = document.createElement('style');
 style.id = 'eureka-styles';
 style.innerHTML = `${globalCss}\n${stylesheet}`;
 document.head.append(style);
-render(() => (
+
+document.addEventListener('DOMContentLoaded', () => {
+  render(() => (
     <div id='eureka-dashboard'>
-        <Dashboard />
+      <Dashboard />
     </div>
-), document.body);
+  ), document.body);
+});
 
 eureka.openDashboard = (status: Exclude<DashboardStatus, DashboardStatus.NONE>) => {
     setModalStatus(status);

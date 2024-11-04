@@ -15,9 +15,9 @@
     "typecheck": "tsc --noEmit",
     "lint": "eslint --ext .ts,.tsx .",
     "lint:fix": "eslint --ext .ts,.tsx --fix .",
-    "ci": "yarn typecheck && run-s lint",
     "build:js": "rollup -c",
-    "build": "cross-env NODE_ENV=production run-s ci clean build:js"
+    "build": "cross-env NODE_ENV=production run-s typecheck clean build:js",
+    "test": "jest"
   },
   "dependencies": {
     "@babel/runtime": "^7.24.1",

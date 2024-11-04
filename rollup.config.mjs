@@ -9,13 +9,13 @@ const { packageJson } = await readPackageUp();
 
 export default defineConfig(
   Object.entries({
-    'main': 'src/main/index.ts',
+    'eureka': 'src/main/index.ts',
   }).map(([name, entry]) => ({
     input: entry,
     plugins: [
       ...definePlugins({
         esm: true,
-        minimize: false,
+        minimize: true,
         postcss: {
           inject: false,
           minimize: true,
