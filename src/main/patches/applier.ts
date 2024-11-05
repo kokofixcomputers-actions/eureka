@@ -268,7 +268,16 @@ export function applyPatches (vm: DucktypedVM, blocks: DucktypedScratchBlocks | 
             vm,
             {
                 deserializeProject (originalMethod, projectJSON, zip) {
-                    const extensionURLs: Record<string, string> = typeof projectJSON.sideloadExtensionURLs === 'object' ? projectJSON.sideloadExtensionURLs as Record<string, string> : {};
+                    const sideloadExtensionURLs: Record<string, string> = typeof projectJSON.sideloadExtensionURLs === 'object' ? projectJSON.sideloadExtensionURLs as Record<string, string> : {};
+                    const extensionURLs: Record<string, string> = typeof projectJSON.extensionURLs === 'object' ? projectJSON.extensionURLs as Record<string, string> : {};
+
+                    // Migrate from old eureka
+                    if (projectJSON.extensionEnvs) {
+                        log.info('Old eureka-ify project detected, migrating...');
+                        projectJSON.sideloadExtensionEnvs =
+                            projectJSON.extensionEnvs as Record<string, unknown>;
+                        delete projectJSON.extensionEnvs;
+                    }
 
                     if (projectJSON.targets instanceof Array) {
                         for (const target of projectJSON.targets) {
@@ -288,7 +297,7 @@ export function applyPatches (vm: DucktypedVM, blocks: DucktypedScratchBlocks | 
                                     }
                                     block.opcode = originalOpcode;
                                     ctx.declaredIds.push(extensionId);
-                                    idToURLMapping.set(extensionId, extensionURLs[extensionId]);
+                                    idToURLMapping.set(extensionId, sideloadExtensionURLs[extensionId] ?? extensionURLs[extensionId]);
                                     try {
                                         const mutation = typeof block.mutation.mutation === 'string' ? JSON.parse(block.mutation.mutation) : null;
                                         if (mutation) {
@@ -301,6 +310,10 @@ export function applyPatches (vm: DucktypedVM, blocks: DucktypedScratchBlocks | 
                                         }), e);
                                         delete block.mutation;
                                     }
+                                } else if ((getExtensionIdForOpcode(block.opcode) in sideloadExtensionURLs) || (typeof projectJSON.sideloadExtensionEnvs === 'object' && getExtensionIdForOpcode(block.opcode) in projectJSON.sideloadExtensionEnvs)) {
+                                    const extensionId = getExtensionIdForOpcode(block.opcode);
+                                    ctx.declaredIds.push(extensionId);
+                                    idToURLMapping.set(extensionId, sideloadExtensionURLs[extensionId] ?? extensionURLs[extensionId]);
                                 }
                             }
                         }
@@ -316,6 +329,10 @@ export function applyPatches (vm: DucktypedVM, blocks: DucktypedScratchBlocks | 
                     ) {
                         projectJSON.monitors.push(...projectJSON.sideloadMonitors);
                         delete projectJSON.sideloadMonitors;
+                    }
+
+                    if (typeof projectJSON.sideloadExtensionEnvs === 'object') {
+                        delete projectJSON.sideloadExtensionEnvs;
                     }
 
                     return originalMethod?.(projectJSON, zip);
