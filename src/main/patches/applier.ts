@@ -93,6 +93,23 @@ export function applyPatches (vm: DucktypedVM, blocks: DucktypedScratchBlocks | 
                         }
                     );
                 }
+
+                if (settings.mixins['blocks.Blocks.argument_reporter_boolean.init']) {
+                    MixinApplicator.applyTo(
+                        blocks.Blocks.argument_reporter_boolean,
+                        {
+                            init(originalMethod) {
+                                originalMethod();
+                                queueMicrotask(() => {
+                                    if (this.getFieldValue('VALUE') === '🧐 Eureka?' && !(this.dragStrategy instanceof blocks.dragging.BlockDragStrategy) && !this.isInFlyout) {
+                                        this.setDragStrategy(new blocks.dragging.BlockDragStrategy(this));
+                                        this.dragStrategy.block?.dispose();
+                                    }
+                                });
+                            }
+                        }
+                    );
+                }
             } else {
                 MixinApplicator.applyTo(
                     blocks.Procedures,
@@ -115,23 +132,6 @@ export function applyPatches (vm: DucktypedVM, blocks: DucktypedScratchBlocks | 
                     injectToolbox(xmlList, workspace);
                     
                     return xmlList;
-                }
-            }
-        );
-    }
-
-    if (settings.mixins['blocks.Blocks.argument_reporter_boolean.init']) {
-        MixinApplicator.applyTo(
-            blocks.Blocks.argument_reporter_boolean,
-            {
-                init (originalMethod) {
-                    originalMethod();
-                    queueMicrotask(() => {
-                        if (this.getFieldValue('VALUE') === '🧐 Eureka?' && !(this.dragStrategy instanceof blocks.dragging.BlockDragStrategy) && !this.isInFlyout) {
-                            this.setDragStrategy(new blocks.dragging.BlockDragStrategy(this));
-                            this.dragStrategy.block?.dispose();
-                        }
-                    });
                 }
             }
         );
@@ -324,10 +324,9 @@ export function applyPatches (vm: DucktypedVM, blocks: DucktypedScratchBlocks | 
             vm,
             {
                 async _loadExtensions (originalMethod, extensionIDs, extensionURLs) {
-
                     const sideloadExtensionPromises: Promise<void>[] = [];
                     for (const extensionId of extensionIDs) {
-                        if (extensionId in ctx.declaredIds) {
+                        if (ctx.declaredIds.includes(extensionId)) {
                             const loadResult = this.extensionManager.loadExtensionURL(extensionId);
                             if (isPromise(loadResult)) {
                                 sideloadExtensionPromises.push(loadResult as unknown as Promise<void>);
@@ -335,6 +334,7 @@ export function applyPatches (vm: DucktypedVM, blocks: DucktypedScratchBlocks | 
                             extensionIDs.delete(extensionId);
                         }
                     }
+
                     return Promise.all([
                         originalMethod?.(extensionIDs, extensionURLs),
                         ...sideloadExtensionPromises
@@ -415,7 +415,7 @@ export function applyPatches (vm: DucktypedVM, blocks: DucktypedScratchBlocks | 
                                 vm.ccExtensionManager!.info,
                                 extensionId
                             ) &&
-                            extensionId in ctx.declaredIds
+                            ctx.declaredIds.includes(extensionId)
                         ) {
                             vm.ccExtensionManager!.info[extensionId] = {
                                 api: 0
