@@ -296,8 +296,9 @@ export function applyPatches (vm: DucktypedVM, blocks: DucktypedScratchBlocks | 
                                         continue;
                                     }
                                     block.opcode = originalOpcode;
-                                    ctx.declaredIds.push(extensionId);
-                                    idToURLMapping.set(extensionId, sideloadExtensionURLs[extensionId] ?? extensionURLs[extensionId]);
+                                    const url = sideloadExtensionURLs[extensionId] ?? extensionURLs[extensionId];
+                                    ctx.declaredIds.push(extensionId, url);
+                                    idToURLMapping.set(extensionId, url);
                                     try {
                                         const mutation = typeof block.mutation.mutation === 'string' ? JSON.parse(block.mutation.mutation) : null;
                                         if (mutation) {
@@ -312,8 +313,9 @@ export function applyPatches (vm: DucktypedVM, blocks: DucktypedScratchBlocks | 
                                     }
                                 } else if ((getExtensionIdForOpcode(block.opcode) in sideloadExtensionURLs) || (typeof projectJSON.sideloadExtensionEnvs === 'object' && getExtensionIdForOpcode(block.opcode) in projectJSON.sideloadExtensionEnvs)) {
                                     const extensionId = getExtensionIdForOpcode(block.opcode);
-                                    ctx.declaredIds.push(extensionId);
-                                    idToURLMapping.set(extensionId, sideloadExtensionURLs[extensionId] ?? extensionURLs[extensionId]);
+                                    const url = sideloadExtensionURLs[extensionId] ?? extensionURLs[extensionId];
+                                    ctx.declaredIds.push(extensionId, url);
+                                    idToURLMapping.set(extensionId, url);
                                 }
                             }
                         }
