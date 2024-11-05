@@ -11,6 +11,7 @@
 // @match       https://world.xiaomawang.com/*
 // @match       https://cocrea.world/*
 // @match       https://create.codelab.club/*
+// @match       https://addon.codelab.club/*
 // @match       https://www.scratch-cn.cn/*
 // @match       https://www.40code.com/*
 // @match       https://turbowarp.org/*

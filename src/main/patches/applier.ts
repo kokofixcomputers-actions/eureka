@@ -2,7 +2,7 @@ import log from '../util/console';
 import settingsAgent from '../util/settings';
 import { MixinApplicator } from '../util/inject';
 import { injectToolbox } from './toolbox-stuffs';
-import { forwardedLoadExtensionURL, idToURLMapping, loadedExtensions, predefinedCallbackKeys, refreshForwardedBlocks } from '../middleware';
+import { forwardedLoadExtensionURL, loadedExtensions, predefinedCallbackKeys, refreshForwardedBlocks } from '../middleware';
 import { BlockType } from '../middleware/extension-metadata';
 import xmlEscape from '../util/xml-escape';
 import { maybeFormatMessage } from '../util/maybe-format-message';
@@ -10,6 +10,7 @@ import * as l10n from '../util/l10n';
 import formatMessage from 'format-message';
 
 const settings = settingsAgent.getSettings();
+const idToURLMapping = new Map<string, string>();
 
 /**
  * Utility function to determine if a value is a Promise.
@@ -150,7 +151,11 @@ export function applyPatches (vm: DucktypedVM, blocks: DucktypedScratchBlocks | 
             vm.extensionManager,
             {
                 loadExtensionURL (originalMethod, extensionURL) {
-                    if (settings.behavior.redirectDeclared && ctx.declaredIds.includes(extensionURL)) {
+                    if (idToURLMapping.has(extensionURL)) {
+                        extensionURL = idToURLMapping.get(extensionURL)!;
+                    }
+
+                    if (settings.behavior.redirectDeclared && ctx.declaredIds.includes(extensionURL) && !loadedExtensions.has(extensionURL)) {
                         return forwardedLoadExtensionURL(extensionURL);
                     }
 
@@ -164,7 +169,7 @@ export function applyPatches (vm: DucktypedVM, blocks: DucktypedScratchBlocks | 
                         }
                     };
 
-                    if (settings.behavior.redirectURL && isURL(extensionURL)) {
+                    if (settings.behavior.redirectURL && isURL(extensionURL) && !loadedExtensions.has(extensionURL)) {
                         ctx.declaredIds.push(extensionURL);
                         return forwardedLoadExtensionURL(extensionURL);
                     }
