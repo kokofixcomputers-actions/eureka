@@ -1,3 +1,4 @@
+import formatMessage from 'format-message';
 import log from '../util/console';
 
 const MAX_LISTENING_MS = 30 * 1000;
@@ -7,12 +8,18 @@ const MAX_LISTENING_MS = 30 * 1000;
  * @return Callback promise. After that you could use window.eureka.vm to get the virtual machine.
  */
 export async function getVMInstance (): Promise<DucktypedVM> {
-    log.info('Listening bind function...');
+    log.info(formatMessage({
+        id: 'eureka.trap.vm.listening',
+        default: 'Listening bind function...'
+    }));
     const oldBind = Function.prototype.bind;
     
     const vm = await new Promise<DucktypedVM>((resolve, reject) => {
         const timeoutId = setTimeout(() => {
-            log.info('Cannot find vm instance, stop listening.');
+            log.info(formatMessage({
+                id: 'eureka.trap.vm.timeout',
+                default: 'Timeout when finding vm instance, stop listening.'
+            }));
             Function.prototype.bind = oldBind;
             reject();
         }, MAX_LISTENING_MS);
@@ -25,7 +32,10 @@ export async function getVMInstance (): Promise<DucktypedVM> {
                 Object.prototype.hasOwnProperty.call(args[0], 'editingTarget') &&
                 Object.prototype.hasOwnProperty.call(args[0], 'runtime')
             ) {
-                log.info('VM detected!');
+                log.info(formatMessage({
+                    id: 'eureka.trap.vm.detected',
+                    default: 'VM detected!'
+                }));
                 Function.prototype.bind = oldBind;
                 clearTimeout(timeoutId);
                 resolve(args[0]);

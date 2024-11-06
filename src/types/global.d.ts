@@ -9,8 +9,9 @@ declare var eureka: EurekaContext | undefined;
 interface EurekaContext {
     declaredIds: string[];
     vm?: DucktypedVM;
+    version: string;
     blocks?: DucktypedScratchBlocks | undefined;
-    openDashboard? (status: DashboardStatus): void;
+    openDashboard? (status?: DashboardStatus): void;
     closeDashboard? (): void;
     load? (url: string): void;
 }

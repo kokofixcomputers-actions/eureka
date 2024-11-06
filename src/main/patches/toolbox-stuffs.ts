@@ -1,6 +1,5 @@
 import format from 'format-message';
 import { eureka } from '../ctx';
-import { DashboardStatus } from '../dashboard/app';
 
 export function injectToolbox (xmlList: HTMLElement[], workspace: DucktypedBlocksWorkspace) {
     // Add separator and label
@@ -19,7 +18,7 @@ export function injectToolbox (xmlList: HTMLElement[], workspace: DucktypedBlock
     }));
     dashboardButton.setAttribute('callbackKey', 'EUREKA_FRONTEND');
     workspace.registerButtonCallback('EUREKA_FRONTEND', () => {
-        eureka.openDashboard(DashboardStatus.LOADER);
+        eureka.openDashboard();
     });
     xmlList.push(dashboardButton);
 

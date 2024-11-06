@@ -36,5 +36,9 @@
     "eureka.settings.blocks.getMainWorkspace().toolboxCategoryCallbacks.PROCEDURE": "blocks.getMainWorkspace().toolboxCategoryCallbacks.PROCEDURE",
     "eureka.settings.blocks.Blocks.argument_reporter_boolean.init": "blocks.Blocks.argument_reporter_boolean.init",
     "eureka.settings.vm.runtime._convertButtonForScratchBlocks": "vm.runtime._convertButtonForScratchBlocks",
-    "eureka.settings.vm.runtime._convertForScratchBlocks": "vm.runtime._convertForScratchBlocks"
+    "eureka.settings.vm.runtime._convertForScratchBlocks": "vm.runtime._convertForScratchBlocks",
+    "eureka.trap.vm.listening": "Listening bind function...",
+    "eureka.trap.vm.timeout": "Timeout when finding vm instance, stop listening.",
+    "eureka.trap.vm.detected": "VM detected!",
+    "eureka.modernBlocklyDetected": "Modern blockly detected"
 }

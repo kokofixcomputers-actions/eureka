@@ -36,5 +36,9 @@
     "eureka.settings.blocks.getMainWorkspace().toolboxCategoryCallbacks.PROCEDURE": "blocks.getMainWorkspace().toolboxCategoryCallbacks.PROCEDURE",
     "eureka.settings.blocks.Blocks.argument_reporter_boolean.init": "blocks.Blocks.argument_reporter_boolean.init",
     "eureka.settings.vm.runtime._convertButtonForScratchBlocks": "vm.runtime._convertButtonForScratchBlocks",
-    "eureka.settings.vm.runtime._convertForScratchBlocks": "vm.runtime._convertForScratchBlocks"
+    "eureka.settings.vm.runtime._convertForScratchBlocks": "vm.runtime._convertForScratchBlocks",
+    "eureka.trap.vm.listening": "正在监听 Function.bind()",
+    "eureka.trap.vm.timeout": "监听 VM 实例超时，停止监听。",
+    "eureka.trap.vm.detected": "VM 已捕获！",
+    "eureka.modernBlocklyDetected": "检测到现代 Blockly"
 }

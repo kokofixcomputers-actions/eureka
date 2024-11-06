@@ -59,7 +59,10 @@ export function applyPatches (vm: DucktypedVM, blocks: DucktypedScratchBlocks | 
     if (blocks) {
         if (settings.mixins['blocks.Procedures.addCreateButton_']) {
             if (blocks.__esModule) {
-                log.info('Modern blockly detected');
+                log.info(formatMessage({
+                    id: 'eureka.modernBlocklyDetected',
+                    default: 'Modern blockly detected'
+                }));
 
                 // Replace initial category callback
                 if (settings.mixins['blocks.getMainWorkspace().toolboxCategoryCallbacks.PROCEDURE']) {
@@ -140,7 +143,10 @@ export function applyPatches (vm: DucktypedVM, blocks: DucktypedScratchBlocks | 
 
     const workspace = (blocks ?? globalThis.Blockly).getMainWorkspace?.();
     if (!workspace) {
-        log.error('Failed to refresh toolbox: workspace is undefined');
+        log.error(formatMessage({
+            id: 'eureka.applier.failedToRefreshToolbox',
+            default: 'Failed to refresh toolbox: workspace is undefined'
+        }));
     }
     workspace.getToolbox().refreshSelection();
     workspace.toolboxRefreshEnabled_ = true;
@@ -273,7 +279,10 @@ export function applyPatches (vm: DucktypedVM, blocks: DucktypedScratchBlocks | 
 
                     // Migrate from old eureka
                     if (projectJSON.extensionEnvs) {
-                        log.info('Old eureka-ify project detected, migrating...');
+                        log.info(formatMessage({
+                            id: 'eureka.migrating',
+                            default: 'Old eureka-ify project detected, migrating...'
+                        }));
                         projectJSON.sideloadExtensionEnvs =
                             projectJSON.extensionEnvs as Record<string, unknown>;
                         delete projectJSON.extensionEnvs;

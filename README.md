@@ -21,7 +21,7 @@ Eureka is a userscript which can load 3rd-party extensions in any Scratch-based 
 
 # 🔧 Compatibility
 
-*Here's the refactored version of Eureka, Many platform still left untested. You can choose the legacy version (<= 8.1 >) of Eureka or open an issue for the compatibility problem you faced in those untested platforms!*
+*Here's the refactored version of Eureka, Many platform still left untested. You can choose the legacy (version <= 8.1) Eureka or open an issue for the compatibility problem you faced in those untested platforms!*
 
 | Platform                        | Load extension manually | Conversion of sideloaded blocks | Load extension from eureka-ify projects | Extended Scratch context | No mixin conflicts |
 |---------------------------------|-------------------------|---------------------------------|-----------------------------------------|--------------------------|--------------------|

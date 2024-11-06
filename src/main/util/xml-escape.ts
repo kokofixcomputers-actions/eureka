@@ -17,7 +17,7 @@ function xmlEscape (unsafe: string | string[]) {
              */
             unsafe = String(unsafe);
         } else {
-            log.error('Unexpected input recieved in replaceUnsafeChars');
+            log.error('Unexpected input recieved in replaceUnsafeChars: ', unsafe);
             return unsafe;
         }
     }

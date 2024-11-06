@@ -1,3 +1,6 @@
+import { version } from '../../package.json';
+
 export const eureka: EurekaContext = {
-    declaredIds: []
+    declaredIds: [],
+    version
 };

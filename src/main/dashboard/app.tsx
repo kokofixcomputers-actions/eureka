@@ -436,7 +436,7 @@ document.addEventListener('DOMContentLoaded', () => {
   ), document.body);
 });
 
-eureka.openDashboard = (status: Exclude<DashboardStatus, DashboardStatus.NONE>) => {
+eureka.openDashboard = (status: Exclude<DashboardStatus, DashboardStatus.NONE> = DashboardStatus.LOADER) => {
     setModalStatus(status);
 };
 
