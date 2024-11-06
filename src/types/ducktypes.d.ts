@@ -54,6 +54,7 @@ interface DucktypedVM {
         _convertButtonForScratchBlocks (info: ExtensionBlockMetadata, categoryInfo: CategoryInfo): ConvertedBlockInfo;
         getEditingTarget (): any;
         getTargetForStage (): any;
+        renderer: any;
     }
     toJSON(optTargetId?: string): string;
     deserializeProject(projectJSON: Record<string, unknown>, zip): Promise<void>;

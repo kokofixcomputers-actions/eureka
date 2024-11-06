@@ -9,6 +9,8 @@ import formatMessage from 'format-message';
 import { eureka } from './ctx';
 import { applyPatches } from './patches/applier';
 import { setLocale } from './util/l10n';
+import { getRedux } from './trap/redux';
+import './dashboard/app';
 
 log.info(
     formatMessage({
@@ -24,10 +26,16 @@ const settings = settingsAgent.getSettings();
     if (settings.trap.vm) {
         try {
             const vm = eureka.vm = await getVMInstance();
+            if (settings.behavior.polyfillGlobalInstances && typeof globalThis.vm === 'undefined') {
+                globalThis.vm = vm;
+            }
             setLocale(vm.getLocale());
             if (settings.trap.blocks) {
                 try {
                     eureka.blocks = await getScratchBlocksInstance(vm);
+                    if (settings.behavior.polyfillGlobalInstances && typeof globalThis.ScratchBlocks === 'undefined') {
+                        globalThis.ScratchBlocks = eureka.blocks;
+                    }
                 } catch (e) {
                     log.error(
                         formatMessage({
@@ -53,6 +61,51 @@ const settings = settingsAgent.getSettings();
                 formatMessage({
                     id: 'eureka.failedToGetVM',
                     default: 'Failed to get VM.'
+                })
+                , '\n', e);
+        }
+    }
+})();
+
+(async () => {
+    if (settings.trap.redux) {
+        try {
+            log.info(
+                formatMessage({
+                    id: 'eureka.gettingRedux',
+                    default: 'Getting Redux...'
+                })
+            );
+            eureka.redux = await getRedux();
+            log.info(
+                formatMessage({
+                    id: 'eureka.reduxReady',
+                    default: 'Redux is ready.'
+                })
+            );
+            if (settings.behavior.polyfillGlobalInstances && typeof globalThis.ReduxStore === 'undefined') {
+                globalThis.ReduxStore = {
+                    dispatch: eureka.redux.dispatch,
+                    getState: () => eureka.redux.state,
+                    subscribe: (cb: (state: any) => void) => {
+                        if (typeof cb !== 'function') {
+                            throw new Error('The listener is not a function');
+                        }
+                        const wrappedCb = (ev: CustomEvent) => {
+                            cb(ev.detail.next);
+                        };
+                        eureka.redux.target.addEventListener('statechanged', wrappedCb);
+                        return () => {
+                            eureka.redux.target.removeEventListener('statechanged', wrappedCb);
+                        };
+                    }
+                };
+            }
+        } catch (e) {
+            log.error(
+                formatMessage({
+                    id: 'eureka.failedToGetRedux',
+                    default: 'Failed to get Redux.'
                 })
                 , '\n', e);
         }

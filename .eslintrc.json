@@ -18,6 +18,7 @@
     }
   },
   "rules": {
+    "@typescript-eslint/no-explicit-any": "off",
     "semi": "error",
     "indent": [
       "error",

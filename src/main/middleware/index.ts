@@ -313,7 +313,17 @@ interface ExtendedScratchObject extends BaseScratchObject {
     translate: ReturnType<typeof createTranslate>;
     renderer?: any;
     fetch: typeof fetch;
-    canFetch(url: string): boolean;
+    canFetch(url: string): Promise<boolean>;
+    canEmbed(url: string): Promise<boolean>;
+    canOpenWindow(url: string): Promise<boolean>;
+    canRedirect(url: string): Promise<boolean>;
+    canRecordAudio(): Promise<boolean>;
+    canRecordVideo(): Promise<boolean>;
+    canReadClipboard(): Promise<boolean>;
+    canNotify(): Promise<boolean>;
+    canGeolocate(): Promise<boolean>;
+    openWindow(url: string, features?: string): Promise<Window | null>;
+    redirect(url: string): Promise<void>;
     gui: {
         getBlockly: () => Promise<DucktypedScratchBlocks>;
         getBlocklyEagerly: () => typeof Blockly | null;
@@ -345,11 +355,40 @@ function makeScratchObject (ctx: EurekaContext): ExtendedScratchObject {
             eureka: true
         },
         vm: ctx.vm,
+        renderer: ctx.vm.runtime.renderer,
         translate: createTranslate(ctx.vm),
         fetch: (url: URL | RequestInfo, options?: RequestInit | undefined) => fetch(url, options),
-        canFetch: (url: string) => {
-            const parsed = parseURL(url);
-            return !!parsed;
+        canFetch: async (url: string) => {
+            return !!parseURL(url);
+        },
+        canEmbed: async (url: string) => {
+            return !!parseURL(url);
+        },
+        canOpenWindow: async (url: string) => {
+            return parseURL(url)?.protocol !== 'javascript:';
+        },
+        canRedirect: async (url: string) => {
+            return parseURL(url)?.protocol !== 'javascript:';
+        },
+        canRecordAudio: async () => true,
+        canRecordVideo: async () => true,
+        canReadClipboard: async () => true,
+        canNotify: async () => true,
+        canGeolocate: async () => true,
+        openWindow: async (url: string, features?: string) => {
+            if (!await this.canOpenWindow(url)) {
+                throw new Error(`Permission to open tab ${url} rejected.`);
+            }
+            // Use noreferrer to prevent new tab from accessing `window.opener`
+            const baseFeatures = 'noreferrer';
+            features = features ? `${baseFeatures},${features}` : baseFeatures;
+            return window.open(url, '_blank', features);
+        },
+        redirect: async (url: string) => {
+            if (!await this.canRedirect(url)) {
+                throw new Error(`Permission to redirect to ${url} rejected.`);
+            }
+            location.href = url;
         },
         gui: {
             getBlockly: () => getScratchBlocksInstance(ctx.vm),

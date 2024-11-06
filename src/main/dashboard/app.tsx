@@ -248,6 +248,33 @@ function Dashboard() {
               <Match when={status() === DashboardStatus.SETTINGS}>
                 <div class={styles.settings}>
                   <span class={styles.label}>
+                    <FormattedMessage id='eureka.settings.trap' default='Trap' />
+                  </span>
+                  <div class={styles.settingsItem}>
+                    <span>
+                      <FormattedMessage id='eureka.settings.vm' default='VirtualMachine' />
+                    </span>
+                    <SwitchComponent value={wrappedSettings().trap.vm} onChange={(value) => {
+                      settings.trap.vm = value;
+                    }} />
+                  </div>
+                  <div class={styles.settingsItem}>
+                    <span>
+                      <FormattedMessage id='eureka.settings.blocks' default='ScratchBlocks' />
+                    </span>
+                    <SwitchComponent value={wrappedSettings().trap.blocks} onChange={(value) => {
+                      settings.trap.blocks = value;
+                    }} />
+                  </div>
+                  <div class={styles.settingsItem}>
+                    <span>
+                      <FormattedMessage id='eureka.settings.redux' default='ReduxStore' />
+                    </span>
+                    <SwitchComponent value={wrappedSettings().trap.redux} onChange={(value) => {
+                      settings.trap.redux = value;
+                    }} />
+                  </div>
+                  <span class={styles.label}>
                     <FormattedMessage id='eureka.settings.behavior' default='Behavior' />
                   </span>
                   <div class={styles.settingsItem}>
@@ -272,6 +299,14 @@ function Dashboard() {
                     </span>
                     <SwitchComponent value={wrappedSettings().behavior.exposeCtx} onChange={(value) => {
                       settings.behavior.exposeCtx = value;
+                    }} />
+                  </div>
+                  <div class={styles.settingsItem}>
+                    <span>
+                      <FormattedMessage id='eureka.settings.polyfillGlobalInstances' default="Polyfill Scratch's global instances" />
+                    </span>
+                    <SwitchComponent value={wrappedSettings().behavior.polyfillGlobalInstances} onChange={(value) => {
+                      settings.behavior.polyfillGlobalInstances = value;
                     }} />
                   </div>
                   <div class={styles.settingsItem}>

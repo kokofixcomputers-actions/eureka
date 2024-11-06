@@ -3,8 +3,8 @@ type Callback = (path: string[], value: any, previousValue: any) => void;
 interface Settings {
     trap: {
         vm: boolean;
+        redux: boolean;
         blocks: boolean;
-        paper: boolean;
     },
     mixins: {
         'vm.extensionManager.loadExtensionURL': boolean;
@@ -29,6 +29,7 @@ interface Settings {
         redirectDeclared: boolean;
         exposeCtx: boolean;
         headless: boolean;
+        polyfillGlobalInstances: boolean;
     },
     lang: string;
 }
@@ -36,14 +37,15 @@ interface Settings {
 const defaultSettings: Settings = {
     trap: {
         vm: true,
-        blocks: true,
-        paper: true
+        redux: false,
+        blocks: true
     },
     behavior: {
         redirectURL: false,
         redirectDeclared: true,
         exposeCtx: true,
-        headless: false
+        headless: false,
+        polyfillGlobalInstances: false
     },
     mixins: {
         'vm.extensionManager.loadExtensionURL': true,

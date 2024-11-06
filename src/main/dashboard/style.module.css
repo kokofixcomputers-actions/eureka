@@ -174,7 +174,7 @@
 }
 
 .settings .label {
-  @apply font-bold text-[var(--eureka-text-primary)] pb-2;
+  @apply font-bold text-[var(--eureka-text-primary)] py-2;
 }
 
 .settings .settingsItem {
