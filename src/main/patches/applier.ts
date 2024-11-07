@@ -163,6 +163,10 @@ export function applyPatchesForVM (vm: DucktypedVM, ctx: EurekaContext) {
                     }
 
                     if (settings.behavior.redirectDeclared && ctx.declaredIds.includes(extensionURL) && !loadedExtensions.has(extensionURL)) {
+                        log.info(formatMessage({
+                            id: 'eureka.redirectingDeclared',
+                            default: 'Redirecting declared extension {extensionURL}'
+                        }, { extensionURL }));
                         return forwardedLoadExtensionURL(extensionURL);
                     }
 
@@ -178,6 +182,10 @@ export function applyPatchesForVM (vm: DucktypedVM, ctx: EurekaContext) {
 
                     if (settings.behavior.redirectURL && isURL(extensionURL) && !loadedExtensions.has(extensionURL)) {
                         ctx.declaredIds.push(extensionURL);
+                        log.info(formatMessage({
+                            id: 'eureka.redirectingURL',
+                            default: 'Redirecting URL {extensionURL}'
+                        }, { extensionURL }));
                         return forwardedLoadExtensionURL(extensionURL);
                     }
 

@@ -44,5 +44,7 @@
     "eureka.gettingRedux": "Getting Redux...",
     "eureka.reduxReady": "Redux is ready.",
     "eureka.failedToGetRedux": "Failed to get Redux.",
-    "eureka.settings.polyfillGlobalInstances": "Expose Scratch internal instances globally"
+    "eureka.settings.polyfillGlobalInstances": "Expose Scratch internal instances globally",
+    "eureka.redirectingDeclared": "Redirecting declared extension {extensionURL}",
+    "eureka.redirectingURL": "Redirecting URL {extensionURL}"
 }
