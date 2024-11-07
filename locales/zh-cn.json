@@ -40,5 +40,9 @@
     "eureka.trap.vm.listening": "正在监听 Function.bind()",
     "eureka.trap.vm.timeout": "监听 VM 实例超时，停止监听。",
     "eureka.trap.vm.detected": "VM 已捕获！",
-    "eureka.modernBlocklyDetected": "检测到现代 Blockly"
+    "eureka.modernBlocklyDetected": "检测到现代 Blockly",
+    "eureka.gettingRedux": "正在获取 Redux...",
+    "eureka.reduxReady": "Redux 已预备。",
+    "eureka.failedToGetRedux": "获取 Redux 失败",
+    "eureka.settings.polyfillGlobalInstances": "全局暴露 Scratch 内部实例"
 }

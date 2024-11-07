@@ -40,5 +40,9 @@
     "eureka.trap.vm.listening": "Listening bind function...",
     "eureka.trap.vm.timeout": "Timeout when finding vm instance, stop listening.",
     "eureka.trap.vm.detected": "VM detected!",
-    "eureka.modernBlocklyDetected": "Modern blockly detected"
+    "eureka.modernBlocklyDetected": "Modern blockly detected",
+    "eureka.gettingRedux": "Getting Redux...",
+    "eureka.reduxReady": "Redux is ready.",
+    "eureka.failedToGetRedux": "Failed to get Redux.",
+    "eureka.settings.polyfillGlobalInstances": "Expose Scratch internal instances globally"
 }

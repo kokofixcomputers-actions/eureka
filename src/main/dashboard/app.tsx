@@ -303,7 +303,7 @@ function Dashboard() {
                   </div>
                   <div class={styles.settingsItem}>
                     <span>
-                      <FormattedMessage id='eureka.settings.polyfillGlobalInstances' default="Polyfill Scratch's global instances" />
+                      <FormattedMessage id='eureka.settings.polyfillGlobalInstances' default="Expose Scratch internal instances globally" />
                     </span>
                     <SwitchComponent value={wrappedSettings().behavior.polyfillGlobalInstances} onChange={(value) => {
                       settings.behavior.polyfillGlobalInstances = value;

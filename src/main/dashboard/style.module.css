@@ -73,7 +73,8 @@
 }
 
 .input {
-  @apply w-full px-3 py-2 border rounded-md focus:outline-none hover:border-[var(--eureka-accent)] focus:border-[var(--eureka-accent)] border-[var(--eureka-black-transparent)] transition-all;
+  @apply w-full px-3 py-2 bg-white border rounded-md focus:outline-none hover:border-[var(--eureka-accent)] focus:border-[var(--eureka-accent)] border-[var(--eureka-black-transparent)] transition-all;
+  box-sizing: border-box;
 }
 
 .loaderItems {
@@ -90,6 +91,7 @@
 
 .textarea {
   @apply w-full px-3 py-2 border rounded-md focus:outline-none border-[var(--eureka-black-transparent)] focus:border-[var(--eureka-accent)] hover:border-[var(--eureka-accent)] min-h-[100px] transition-all;
+  box-sizing: border-box;
 }
 
 .textarea::placeholder {
@@ -145,6 +147,7 @@
 
 .slider {
   @apply absolute cursor-pointer top-0 left-0 right-0 bottom-0 bg-gray-200 transition-all rounded-full;
+  box-sizing: content-box;
 }
 
 .slider::before {
