@@ -28,16 +28,16 @@ Eureka is a userscript which can load 3rd-party extensions in any Scratch-based 
 | Scratch                         | ✅                       | ✅                               | ✅                                       | ✅                        | ✅                  |
 | Scratch(Spork)                  | ✅                       | ✅                               | ✅                                       | ✅                        | ✅                  |
 | Codingclip                      | ✅                       | ❌                               | ✅                                       | ✅                        | ❓                  |
-| Cocrea                          | ✅                       | ✅                               | ✅                                       | ✅                        | ❓                  |
+| Cocrea                          | ✅                       | ❌                               | ✅                                       | ✅                        | ❓                  |
 | Aerfaying (阿儿法营)             | ✅                       | ✅                               | ✅                                       | ✅                        | ❓                  |
-| Co-Create World (共创世界)       | ✅                       | ✅                               | ✅                                       | ✅                        | ❓                  |
+| Co-Create World (共创世界)       | ✅                       | ❌                               | ✅                                       | ✅                        | ❓                  |
 | Xiaomawang (小码王)              | ✅                       | ✅                               | ✅                                       | ✅                        | ❓                  |
-| CodeLab                         | ✅                       | ❓                               | ✅                                       | ❓                        | ❓                  |
-| 40code                          | ✅                       | ❓                               | ✅                                       | ❓                        | ❓                  |
+| CodeLab                         | ✅                       | ✅                               | ✅                                       | ✅                        | ❓                  |
+| 40code                          | ✅                       | ✅                               | ✅                                       | ✅                        | ❓                  |
 | TurboWarp                       | ✅                       | ✅                               | ✅                                       | ✅                        | ❓                  |
-| Xueersi (学而思)                | ✅                       | ❓                               | ✅                                       | ✅                        | ❓                  |
-| Creaticode                      | ✅                       | ❓                               | ✅                                       | ✅                        | ❓                  |
-| Adacraft                        | ✅                       | ❓                               | ✅                                       | ✅                        | ❓                  |
+| Xueersi (学而思)                | ✅                       | ✅                               | ✅                                       | ✅                        | ❓                  |
+| Creaticode                      | ✅                       | ✅                               | ✅                                       | ✅                        | ❓                  |
+| Adacraft                        | ✅                       | ✅                               | ✅                                       | ✅                        | ❓                  |
 | PenguinMod                      | ✅                       | ❓                               | ❓                                       | ❓                        | ❓                  |
 | ElectraMod                      | ✅                       | ❓                               | ❓                                       | ❓                        | ❓                  |
 | XPLab                           | ✅                       | ❓                               | ❓                                       | ❓                        | ❓                  |
