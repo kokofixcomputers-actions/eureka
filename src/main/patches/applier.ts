@@ -54,7 +54,7 @@ function getExtensionIdForOpcode (opcode: string) {
     if (prefix !== '') return prefix;
 }
 
-export function applyPatches (vm: DucktypedVM, blocks: DucktypedScratchBlocks | undefined, ctx: EurekaContext) {
+export function applyPatchesForBlocks (blocks?: DucktypedScratchBlocks) {
     // Add eureka's toolbox stuffs
     if (blocks) {
         if (settings.mixins['blocks.Procedures.addCreateButton_']) {
@@ -102,7 +102,7 @@ export function applyPatches (vm: DucktypedVM, blocks: DucktypedScratchBlocks | 
                     MixinApplicator.applyTo(
                         blocks.Blocks.argument_reporter_boolean,
                         {
-                            init(originalMethod) {
+                            init (originalMethod) {
                                 originalMethod();
                                 queueMicrotask(() => {
                                     if (this.getFieldValue('VALUE') === '🧐 Eureka?' && !(this.dragStrategy instanceof blocks.dragging.BlockDragStrategy) && !this.isInFlyout) {
@@ -134,7 +134,7 @@ export function applyPatches (vm: DucktypedVM, blocks: DucktypedScratchBlocks | 
                 PROCEDURE (originalMethod, workspace) {
                     const xmlList = originalMethod?.(workspace);
                     injectToolbox(xmlList, workspace);
-                    
+
                     return xmlList;
                 }
             }
@@ -150,8 +150,9 @@ export function applyPatches (vm: DucktypedVM, blocks: DucktypedScratchBlocks | 
     }
     workspace.getToolbox().refreshSelection();
     workspace.toolboxRefreshEnabled_ = true;
+}
 
-
+export function applyPatchesForVM (vm: DucktypedVM, ctx: EurekaContext) {
     if (settings.mixins['vm.extensionManager.loadExtensionURL']) {
         MixinApplicator.applyTo(
             vm.extensionManager,

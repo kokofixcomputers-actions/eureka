@@ -7,7 +7,7 @@ import { getScratchBlocksInstance } from './trap/blocks';
 import './util/l10n';
 import formatMessage from 'format-message';
 import { eureka } from './ctx';
-import { applyPatches } from './patches/applier';
+import { applyPatchesForVM, applyPatchesForBlocks } from './patches/applier';
 import { setLocale } from './util/l10n';
 import { getRedux } from './trap/redux';
 import './dashboard/app';
@@ -25,26 +25,38 @@ const settings = settingsAgent.getSettings();
 (async () => {
     if (settings.trap.vm) {
         try {
-            const vm = eureka.vm = await getVMInstance();
+            const vm = eureka.vm = await getVMInstance().then(vm => {
+                if (settings.trap.blocks) {
+                    getScratchBlocksInstance(vm).then(blocks => {
+                        eureka.blocks = blocks;
+                        log.info(
+                            formatMessage({
+                                id: 'eureka.blocksReady',
+                                default: 'ScratchBlocks is ready.'
+                            })
+                        );
+                        if (settings.behavior.polyfillGlobalInstances && typeof globalThis.ScratchBlocks === 'undefined') {
+                            globalThis.ScratchBlocks = eureka.blocks;
+                        }
+
+                        if (!settings.behavior.headless) {
+                            applyPatchesForBlocks(eureka.blocks);
+                        }
+                    }).catch(e => {
+                        log.error(
+                            formatMessage({
+                                id: 'eureka.failedToGetBlocks',
+                                default: 'Failed to get ScratchBlocks.'
+                            })
+                            , '\n', e);
+                    });
+                }
+                return vm;
+            });
             if (settings.behavior.polyfillGlobalInstances && typeof globalThis.vm === 'undefined') {
                 globalThis.vm = vm;
             }
             setLocale(vm.getLocale());
-            if (settings.trap.blocks) {
-                try {
-                    eureka.blocks = await getScratchBlocksInstance(vm);
-                    if (settings.behavior.polyfillGlobalInstances && typeof globalThis.ScratchBlocks === 'undefined') {
-                        globalThis.ScratchBlocks = eureka.blocks;
-                    }
-                } catch (e) {
-                    log.error(
-                        formatMessage({
-                            id: 'eureka.failedToGetBlocks',
-                            default: 'Failed to get ScratchBlocks.'
-                        })
-                        , '\n', e);
-                }
-            }
 
             if (settings.behavior.headless) {
                 log.warn(
@@ -54,7 +66,7 @@ const settings = settingsAgent.getSettings();
                     })
                 );
             } else {
-                applyPatches(vm, eureka.blocks, eureka);
+                applyPatchesForVM(vm, eureka);
             }
         } catch (e) {
             log.error(
