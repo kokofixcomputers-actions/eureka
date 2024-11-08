@@ -50,7 +50,7 @@ Eureka is the glue that makes it all work by independently implementing a Scratc
 
 1. Install UserScript Manager like Tampermonkey or Violentmonkey.
 2. Install Eureka from [Github Releases](https://github.com/EurekaScratch/eureka/releases).
-3. Enjoy!
+3. Enjoy!!
 
 # ⚓ License
 
