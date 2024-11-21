@@ -56,8 +56,12 @@ function classNames(...classes: (string | null | undefined)[]): string {
   return classes.filter(Boolean).join(' ');
 }
 
-function stringToDataURL (str: string) {
-  return `data:text/plain;base64,${btoa(str)}`;
+function utoa(data) {
+    return btoa(unescape(encodeURIComponent(data)));
+}
+
+function stringToDataURL(str) {
+    return `data:text/plain;base64,${utoa(str)}`;
 }
 
 function SwitchComponent (props: SwitchProps) {
