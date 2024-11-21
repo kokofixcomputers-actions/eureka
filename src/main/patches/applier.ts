@@ -98,6 +98,8 @@ export function applyPatchesForBlocks (blocks?: DucktypedScratchBlocks) {
                     );
                 }
 
+                // Make the newly copied block use default drag strategy, then remove the original one.
+                // It's a dirty hack, may we need a better solution?
                 if (settings.mixins['blocks.Blocks.argument_reporter_boolean.init']) {
                     MixinApplicator.applyTo(
                         blocks.Blocks.argument_reporter_boolean,
@@ -224,6 +226,7 @@ export function applyPatchesForVM (vm: DucktypedVM, ctx: EurekaContext) {
                     const sideloadIds = Object.keys(extensionInfo);
 
                     if ('targets' in obj) {
+                        // It's a full project
                         for (const target of obj.targets) {
                             for (const blockId in target.blocks) {
                                 const block = target.blocks[blockId];
@@ -254,6 +257,7 @@ export function applyPatchesForVM (vm: DucktypedVM, ctx: EurekaContext) {
                             }
                         }
                     } else {
+                        // It's a single sprite
                         for (const blockId in obj.blocks) {
                             const block = obj.blocks[blockId];
                             if (!block.opcode) continue;
@@ -339,6 +343,7 @@ export function applyPatchesForVM (vm: DucktypedVM, ctx: EurekaContext) {
                         }
                     }
 
+                    // Remove eureka's stuffs, make project data clean
                     if (typeof projectJSON.sideloadExtensionURLs === 'object') {
                         delete projectJSON.sideloadExtensionURLs;
                     }
@@ -361,6 +366,7 @@ export function applyPatchesForVM (vm: DucktypedVM, ctx: EurekaContext) {
         );
     }
 
+    // Turbowarp's specific patch, to bypass security manager's check
     if (settings.mixins['vm._loadExtensions'] && typeof vm._loadExtensions === 'function') {
         MixinApplicator.applyTo(
             vm,
@@ -420,6 +426,7 @@ export function applyPatchesForVM (vm: DucktypedVM, ctx: EurekaContext) {
         );
     }
 
+    // Add Turbowarp compiler support
     const ScriptTreeGenerator = vm.exports?.ScriptTreeGenerator ?? getUnsupportedAPI(vm)?.ScriptTreeGenerator;
     if (ScriptTreeGenerator && settings.mixins['vm.exports.ScriptTreeGenerator.prototype.descendInput']) {
         MixinApplicator.applyTo(
@@ -446,6 +453,7 @@ export function applyPatchesForVM (vm: DucktypedVM, ctx: EurekaContext) {
         );
     }
 
+    // ClipCC specific patches, to make sideloaded extension a ClipCC extension
     if (typeof vm.ccExtensionManager === 'object' && settings.mixins['vm.ccExtensionManager.getExtensionLoadOrder']) {
         MixinApplicator.applyTo(
             vm.ccExtensionManager,
@@ -471,6 +479,7 @@ export function applyPatchesForVM (vm: DucktypedVM, ctx: EurekaContext) {
         );
     }
 
+    // Turbowarp extension's polyfill
     if (settings.mixins['vm.runtime._convertForScratchBlocks']) {
         MixinApplicator.applyTo(
             vm.runtime,

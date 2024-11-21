@@ -23,24 +23,24 @@ Eureka is a userscript which can load 3rd-party extensions in any Scratch-based 
 
 *Here's the refactored version of Eureka, Many platform still left untested. You can choose the legacy (version <= 8.1) Eureka or open an issue for the compatibility problem you faced in those untested platforms!*
 
-| Platform                        | Load extension manually | Conversion of sideloaded blocks | Load extension from eureka-ify projects | Extended Scratch context | No mixin conflicts |
-|---------------------------------|-------------------------|---------------------------------|-----------------------------------------|--------------------------|--------------------|
-| Scratch                         | ✅                       | ✅                               | ✅                                       | ✅                        | ✅                  |
-| Scratch(Spork)                  | ✅                       | ✅                               | ✅                                       | ✅                        | ✅                  |
-| Codingclip                      | ✅                       | ❌                               | ✅                                       | ✅                        | ❓                  |
-| Cocrea                          | ✅                       | ❌                               | ✅                                       | ✅                        | ❓                  |
-| Aerfaying (阿儿法营)             | ✅                       | ✅                               | ✅                                       | ✅                        | ❓                  |
-| Co-Create World (共创世界)       | ✅                       | ❌                               | ✅                                       | ✅                        | ❓                  |
-| Xiaomawang (小码王)              | ✅                       | ✅                               | ✅                                       | ✅                        | ❓                  |
-| CodeLab                         | ✅                       | ✅                               | ✅                                       | ✅                        | ❓                  |
-| 40code                          | ✅                       | ✅                               | ✅                                       | ✅                        | ❓                  |
-| TurboWarp                       | ✅                       | ✅                               | ✅                                       | ✅                        | ❓                  |
-| Xueersi (学而思)                | ✅                       | ✅                               | ✅                                       | ✅                        | ❓                  |
-| Creaticode                      | ✅                       | ✅                               | ✅                                       | ✅                        | ❓                  |
-| Adacraft                        | ✅                       | ✅                               | ✅                                       | ✅                        | ❓                  |
-| PenguinMod                      | ✅                       | ❓                               | ❓                                       | ❓                        | ❓                  |
-| ElectraMod                      | ✅                       | ❓                               | ❓                                       | ❓                        | ❓                  |
-| XPLab                           | ✅                       | ❓                               | ❓                                       | ❓                        | ❓                  |
+| Platform                        | Load extension manually | Convert sideloaded blocks | Load extension from eureka-ify projects | Extended Scratch context | No mixin conflicts |
+|---------------------------------|-------------------------|---------------------------|-----------------------------------------|--------------------------|--------------------|
+| Scratch                         | ✅                      | ✅                       | ✅                                      | ✅                       | ✅                |
+| Scratch(Spork)                  | ✅                      | ✅                       | ✅                                      | ✅                       | ✅                |
+| Codingclip                      | ✅                      | ✅                       | ❌                                      | ✅                       | ❓                |
+| Cocrea                          | ✅                      | ✅                       | ❌                                      | ✅                       | ❓                |
+| Aerfaying (阿儿法营)             | ✅                      | ✅                       | ✅                                      | ✅                       | ❓                |
+| Co-Create World (共创世界)       | ✅                      | ✅                       | ❌                                      | ✅                       | ❓                |
+| Xiaomawang (小码王)              | ✅                      | ✅                       | ✅                                      | ✅                       | ❓                |
+| CodeLab                         | ✅                      | ✅                       | ✅                                      | ✅                       | ❓                |
+| 40code                          | ✅                      | ✅                       | ✅                                      | ✅                       | ❓                |
+| TurboWarp                       | ✅                      | ✅                       | ✅                                      | ✅                       | ❓                |
+| Xueersi (学而思)                 | ✅                      | ✅                       | ✅                                      | ✅                       | ❓                |
+| Creaticode                      | ✅                      | ✅                       | ✅                                      | ✅                       | ❓                |
+| Adacraft                        | ✅                      | ✅                       | ✅                                      | ✅                        | ❓               |
+| PenguinMod                      | ✅                      | ❓                       | ❓                                      | ❓                       | ❓                |
+| ElectraMod                      | ✅                      | ❓                       | ❓                                      | ❓                       | ❓                |
+| XPLab                           | ✅                      | ❓                       | ❓                                      | ❓                       | ❓                |
 
 # 🧵 Why my extensions don't works?
 
