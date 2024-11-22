@@ -97,6 +97,7 @@ function SwitchComponent (props: SwitchProps) {
 function LoaderForm() {
   const [loaderType, setLoaderType] = createSignal<LoaderType>('URL');
   const [extensionURL, setURL] = createSignal('');
+  const [errorMessage, setErrorMessage] = useState('');
   const [extensionCode, setCode] = createSignal('');
   const [extensionFile, setFile] = createSignal<File | null>(null);
   const [fileContent, setFileContent] = createSignal<string | null>(null); // Store file content
@@ -194,7 +195,9 @@ function LoaderForm() {
                   }
                   break;
               }
+            
             } catch (error) {
+              setErrorMessage("Error loading extension:" + error);
               console.error("Error loading extension:", error); // Handle any errors that occur during loading
             } finally {
               setLoading(false); // Ensure loading is set to false after loading completes or fails
@@ -203,6 +206,7 @@ function LoaderForm() {
         >
           <FormattedMessage id="eureka.loader.load" default="Load Extension" />
         </button>
+        {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>} {/* Display error message below the button */}
       </div>
     </div>
   );
