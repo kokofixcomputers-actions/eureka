@@ -206,7 +206,7 @@ function LoaderForm() {
         >
           <FormattedMessage id="eureka.loader.load" default="Load Extension" />
         </button>
-        {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>} {/* Display error message below the button */}
+        {errorMessage() && <p style={{ color: 'red' }}>{errorMessage()}</p>} {/* Display error message below the button */}
       </div>
     </div>
   );
