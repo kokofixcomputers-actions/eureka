@@ -46,12 +46,27 @@ const checkEureka = (eurekaFlag: string): boolean | null => {
  * @param {!string} opcode The opcode to examine for extension.
  * @return {?string} The extension ID, if it exists and is not a core extension.
  */
-function getExtensionIdForOpcode (opcode: string) {
+function getExtensionIdForOpcode(opcode) {
+    // Check if opcode is undefined or not a string
+    if (typeof opcode !== 'string' || opcode === undefined) {
+        return; // Return undefined if opcode is not valid
+    }
+
     // Allowed ID characters are those matching the regular expression [\w-]: A-Z, a-z, 0-9, and hyphen ("-").
     const index = opcode.indexOf('_');
+    
+    // If '_' is not found, return undefined
+    if (index === -1) {
+        return;
+    }
+
     const forbiddenSymbols = /[^\w-]/g;
     const prefix = opcode.substring(0, index).replace(forbiddenSymbols, '-');
-    if (prefix !== '') return prefix;
+    
+    // Return prefix only if it's not empty
+    if (prefix !== '') {
+        return prefix;
+    }
 }
 
 export function applyPatchesForBlocks (blocks?: DucktypedScratchBlocks) {
