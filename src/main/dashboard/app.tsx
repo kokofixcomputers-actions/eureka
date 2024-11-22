@@ -97,7 +97,7 @@ function SwitchComponent (props: SwitchProps) {
 function LoaderForm() {
   const [loaderType, setLoaderType] = createSignal<LoaderType>('URL');
   const [extensionURL, setURL] = createSignal('');
-  const [errorMessage, setErrorMessage] = useState('');
+  const [errorMessage, setErrorMessage] = createSignal('');
   const [extensionCode, setCode] = createSignal('');
   const [extensionFile, setFile] = createSignal<File | null>(null);
   const [fileContent, setFileContent] = createSignal<string | null>(null); // Store file content
