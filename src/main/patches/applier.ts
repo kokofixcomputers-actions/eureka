@@ -49,7 +49,7 @@ const checkEureka = (eurekaFlag: string): boolean | null => {
 function getExtensionIdForOpcode(opcode) {
     // Check if opcode is undefined or not a string
     if (typeof opcode !== 'string') {
-        return; // Return undefined if opcode is not valid
+        return ''; // Return undefined if opcode is not valid
     }
 
     // Allowed ID characters are those matching the regular expression [\w-]: A-Z, a-z, 0-9, and hyphen ("-").
@@ -57,7 +57,7 @@ function getExtensionIdForOpcode(opcode) {
     
     // If '_' is not found, return undefined
     if (index === -1) {
-        return;
+        return '';
     }
 
     const forbiddenSymbols = /[^\w-]/g;
