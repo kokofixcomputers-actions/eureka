@@ -2,6 +2,7 @@
 /* Note: might conflict with existing styles if not in shadow DOM */
 
 :root {
+    --eureka-error-primary: rgb(255, 0, 0);
     --eureka-accent: rgb(133, 92, 214);
     --eureka-secondary: rgb(115, 81, 183);
     --eureka-transparent-accent: rgba(133, 92, 214, 0.5);
