@@ -48,7 +48,7 @@ const checkEureka = (eurekaFlag: string): boolean | null => {
  */
 function getExtensionIdForOpcode(opcode) {
     // Check if opcode is undefined or not a string
-    if (typeof opcode !== 'string' || opcode === undefined) {
+    if (typeof opcode !== 'string') {
         return; // Return undefined if opcode is not valid
     }
 
