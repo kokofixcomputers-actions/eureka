@@ -19,7 +19,7 @@ jobs:
           node-version: 20.x
 
       - name: Install dependencies
-        run: yarn install --frozen-lockfile
+        run: yarn install --frozen-lockfile && yarn playwright install
 
       - name: Run tests
         run: yarn build && yarn test
