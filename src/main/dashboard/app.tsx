@@ -485,12 +485,12 @@ function Dashboard() {
   );
 }
 
-const style = document.createElement('style');
-style.id = 'eureka-styles';
-style.innerHTML = `${globalCss}\n${stylesheet}`;
-document.head.append(style);
-
 document.addEventListener('DOMContentLoaded', () => {
+  const style = document.createElement('style');
+  style.id = 'eureka-styles';
+  style.innerHTML = `${globalCss}\n${stylesheet}`;
+  document.head.append(style);
+
   render(() => (
     <div id='eureka-dashboard'>
       <Dashboard />

@@ -1,7 +1,7 @@
 import formatMessage from 'format-message';
 import log from '../util/console';
 
-const MAX_LISTENING_MS = 30 * 1000;
+const MAX_LISTENING_MS = 60 * 1000;
 
 /**
  * Trap to get Virtual Machine instance.
@@ -21,7 +21,7 @@ export async function getVMInstance (): Promise<DucktypedVM> {
                 default: 'Timeout when finding vm instance, stop listening.'
             }));
             Function.prototype.bind = oldBind;
-            reject();
+            reject(new Error('Timeout'));
         }, MAX_LISTENING_MS);
 
         Function.prototype.bind = function (...args) {

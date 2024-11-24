@@ -22,6 +22,8 @@ jobs:
         run: yarn install --frozen-lockfile
       - name: Build
         run: yarn run build
+      - name: Test
+        run: yarn run test
       - name: Upload Canary Userscript
         uses: actions/upload-artifact@v3
         with:

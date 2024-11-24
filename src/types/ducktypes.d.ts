@@ -19,6 +19,7 @@ interface DucktypedToolbox {
 }
 
 interface DucktypedVM {
+    initialized?: boolean;
     exports?: {
         i_will_not_ask_for_help_when_these_break: () => DucktypedUnsupportedAPI;
         // PenguinMod proposed change
