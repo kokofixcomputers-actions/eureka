@@ -16,6 +16,7 @@ interface Settings {
         'vm.runtime._primitives.argument_reporter_boolean': boolean;
         'vm.exports.ScriptTreeGenerator.prototype.descendInput': boolean;
         'vm.ccExtensionManager.getExtensionLoadOrder': boolean;
+        'vm.ccExtensionManager.getLoadedExtensions': boolean;
         'blocks.Procedures.addCreateButton_': boolean;
         'blocks.getMainWorkspace().toolboxCategoryCallbacks_.PROCEDURE': boolean;
         'blocks.WorkspaceSvg.prototype.registerToolboxCategoryCallback': boolean;
@@ -57,6 +58,7 @@ const defaultSettings: Settings = {
         'vm.runtime._primitives.argument_reporter_boolean': true,
         'vm.exports.ScriptTreeGenerator.prototype.descendInput': true,
         'vm.ccExtensionManager.getExtensionLoadOrder': true,
+        'vm.ccExtensionManager.getLoadedExtensions': true,
         'blocks.Procedures.addCreateButton_': true,
         'blocks.getMainWorkspace().toolboxCategoryCallbacks_.PROCEDURE': true,
         'blocks.WorkspaceSvg.prototype.registerToolboxCategoryCallback': true,

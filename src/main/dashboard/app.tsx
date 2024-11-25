@@ -485,7 +485,14 @@ function Dashboard() {
   );
 }
 
-document.addEventListener('DOMContentLoaded', () => {
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initialize);
+} else {
+  initialize();
+}
+
+function initialize () {
   const style = document.createElement('style');
   style.id = 'eureka-styles';
   style.innerHTML = `${globalCss}\n${stylesheet}`;
@@ -496,7 +503,7 @@ document.addEventListener('DOMContentLoaded', () => {
       <Dashboard />
     </div>
   ), document.body);
-});
+}
 
 eureka.openDashboard = (status: Exclude<DashboardStatus, DashboardStatus.NONE> = DashboardStatus.LOADER) => {
     setModalStatus(status);

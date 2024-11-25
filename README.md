@@ -27,10 +27,10 @@ Eureka is a userscript which can load 3rd-party extensions in any Scratch-based 
 |---------------------------------|-------------------------|---------------------------|-----------------------------------------|--------------------------|--------------------|
 | Scratch                         | ✅                      | ✅                       | ✅                                      | ✅                       | ✅                |
 | Scratch(Spork)                  | ✅                      | ✅                       | ✅                                      | ✅                       | ✅                |
-| Codingclip                      | ✅                      | ✅                       | ❌                                      | ✅                       | ❓                |
-| Cocrea                          | ✅                      | ✅                       | ❌                                      | ✅                       | ❓                |
+| Codingclip                      | ✅                      | ✅                       | ☣️(1)                                   | ✅                       | ❓                |
+| Cocrea                          | ✅                      | ✅                       | ✅                                      | ✅                       | ❓                |
 | Aerfaying (阿儿法营)             | ✅                      | ✅                       | ✅                                      | ✅                       | ❓                |
-| Co-Create World (共创世界)       | ✅                      | ✅                       | ❌                                      | ✅                       | ❓                |
+| Co-Create World (共创世界)       | ✅                      | ✅                       | ✅                                      | ✅                       | ❓                |
 | Xiaomawang (小码王)              | ✅                      | ✅                       | ✅                                      | ✅                       | ❓                |
 | CodeLab                         | ✅                      | ✅                       | ✅                                      | ✅                       | ❓                |
 | 40code                          | ✅                      | ✅                       | ✅                                      | ✅                       | ❓                |
@@ -41,6 +41,8 @@ Eureka is a userscript which can load 3rd-party extensions in any Scratch-based 
 | PenguinMod                      | ✅                      | ❓                       | ❓                                      | ❓                       | ❓                |
 | ElectraMod                      | ✅                      | ❓                       | ❓                                      | ❓                       | ❓                |
 | XPLab                           | ✅                      | ❓                       | ❓                                      | ❓                       | ❓                |
+
+(1): The initialize of the sideloaded blocks in workspace are broken
 
 # 🧵 Why my extensions don't works?
 

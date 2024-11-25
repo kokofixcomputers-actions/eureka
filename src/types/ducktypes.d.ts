@@ -18,6 +18,36 @@ interface DucktypedToolbox {
     refreshSelection(): void;
 }
 
+interface DucktypedTarget {
+    isStage: boolean;
+    blocks: {
+        [id: string]: {
+            opcode: string;
+            inputs: Record<string, any>;
+            mutation?: Record<string, any>;
+        }
+    };
+}
+
+interface DucktypedMonitor {
+    id: string;
+    mode: number;
+    opcode: string;
+    params: Record<string, any>;
+}
+
+interface DucktypedProjectJSON {
+    targets: DucktypedTarget[];
+    monitors: DucktypedMonitor[];
+    sideloadMonitors?: DucktypedMonitor[];
+    extensions: Record<string, string> | string[];
+    [prop: string]: unknown;
+}
+
+interface CCXSaveData {
+    projectData: DucktypedProjectJSON
+}
+
 interface DucktypedVM {
     initialized?: boolean;
     exports?: {
@@ -26,8 +56,15 @@ interface DucktypedVM {
         ScriptTreeGenerator?: DucktypedUnsupportedAPI['ScriptTreeGenerator'];
     }
     ccExtensionManager?: {
-        info: Record<string, {api: number}>;
+        info: Record<string, {api: number, optional?: boolean}>;
+        load: Record<string, { api: number, optional?: boolean }>;
         getExtensionLoadOrder(extensions: string[]): unknown;
+        getLoadedExtensions(optional: boolean): Record<string, string>;
+        instance: {
+            [id: string]: {
+                beforeProjectSave? (data: CCXSaveData): void;
+            }
+        }
     }
     _events: {
         [eventName: string]: ((...args: unknown[]) => unknown) | ((...args: unknown[]) => unknown)[]
@@ -58,7 +95,7 @@ interface DucktypedVM {
         renderer: any;
     }
     toJSON(optTargetId?: string): string;
-    deserializeProject(projectJSON: Record<string, unknown>, zip: unknown, extensionCallback?: unknown): Promise<void>;
+    deserializeProject(projectJSON: DucktypedProjectJSON, zip: unknown, extensionCallback?: unknown): Promise<void>;
     _loadExtensions?(extensionIDs: Set<string>, extensionURLs: Map<string, string>): Promise<void[]>;
     setLocale(locale: string, messages: Record<string, string>): Promise<void>;
     getLocale(): Locales;

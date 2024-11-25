@@ -35,6 +35,9 @@ export async function forwardedLoadExtensionURL (url: string) {
 
             loadedExtensions.set(url, { extension: extensionObj, info });
 
+            eureka.declaredIds.push(info.id);
+            eureka.idToURLMapping.set(info.id, url);
+
             // Dispose temporary extension container
             URL.revokeObjectURL(src);
             document.head.removeChild(elem);

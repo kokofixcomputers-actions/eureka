@@ -10,7 +10,6 @@ import * as l10n from '../util/l10n';
 import formatMessage from 'format-message';
 
 const settings = settingsAgent.getSettings();
-const idToURLMapping = new Map<string, string>();
 
 /**
  * Utility function to determine if a value is a Promise.
@@ -175,8 +174,8 @@ export function applyPatchesForVM (vm: DucktypedVM, ctx: EurekaContext) {
             vm.extensionManager,
             {
                 loadExtensionURL (originalMethod, extensionURL) {
-                    if (idToURLMapping.has(extensionURL)) {
-                        extensionURL = idToURLMapping.get(extensionURL)!;
+                    if (ctx.idToURLMapping.has(extensionURL)) {
+                        extensionURL = ctx.idToURLMapping.get(extensionURL)!;
                     }
 
                     if (settings.behavior.redirectDeclared && ctx.declaredIds.includes(extensionURL) && !loadedExtensions.has(extensionURL)) {
@@ -340,7 +339,7 @@ export function applyPatchesForVM (vm: DucktypedVM, ctx: EurekaContext) {
                                         continue;
                                     }
                                     ctx.declaredIds.push(extensionId, url);
-                                    idToURLMapping.set(extensionId, url);
+                                    ctx.idToURLMapping.set(extensionId, url);
 
                                     block.opcode = originalOpcode;
                                     try {
@@ -366,9 +365,16 @@ export function applyPatchesForVM (vm: DucktypedVM, ctx: EurekaContext) {
                                     }
 
                                     ctx.declaredIds.push(extensionId, url);
-                                    idToURLMapping.set(extensionId, url);
+                                    ctx.idToURLMapping.set(extensionId, url);
                                 }
                             }
+                        }
+                    }
+
+                    // ClipCC-specific, to correctly handle load order
+                    if (!Array.isArray(projectJSON.extensions)) {
+                        for (const extensionId in sideloadExtensionURLs) {
+                            projectJSON.extensions[extensionId] = '0.0.0';
                         }
                     }
 
@@ -483,29 +489,96 @@ export function applyPatchesForVM (vm: DucktypedVM, ctx: EurekaContext) {
     }
 
     // ClipCC specific patches, to make sideloaded extension a ClipCC extension
-    if (typeof vm.ccExtensionManager === 'object' && settings.mixins['vm.ccExtensionManager.getExtensionLoadOrder']) {
-        MixinApplicator.applyTo(
-            vm.ccExtensionManager,
-            {
-                getExtensionLoadOrder (originalMethod, extensions) {
-                    for (const extensionId of extensions) {
-                        if (
-                            !Object.prototype.hasOwnProperty.call(
-                                vm.ccExtensionManager!.info,
-                                extensionId
-                            ) &&
-                            ctx.declaredIds.includes(extensionId)
-                        ) {
-                            vm.ccExtensionManager!.info[extensionId] = {
-                                api: 0
-                            };
+    if (typeof vm.ccExtensionManager === 'object') {
+        if (settings.mixins['vm.ccExtensionManager.getExtensionLoadOrder']) {
+            MixinApplicator.applyTo(
+                vm.ccExtensionManager,
+                {
+                    getExtensionLoadOrder (originalMethod, extensions) {
+                        for (const extensionId of extensions) {
+                            if (
+                                !Object.prototype.hasOwnProperty.call(
+                                    vm.ccExtensionManager!.info,
+                                    extensionId
+                                ) &&
+                                ctx.declaredIds.includes(extensionId)
+                            ) {
+                                vm.ccExtensionManager!.info[extensionId] = {
+                                    api: 0,
+                                    optional: true
+                                };
+                            }
+                        }
+
+                        return originalMethod?.(extensions);
+                    }
+                }
+            );
+        }
+        if (settings.mixins['vm.ccExtensionManager.getLoadedExtensions']) {
+            MixinApplicator.applyTo(
+                vm.ccExtensionManager,
+                {
+                    getLoadedExtensions (originalMethod, optional) {
+                        const result = originalMethod?.(optional);
+                        if ('__eureka' in result) {
+                            delete result.__eureka;
+                        }
+
+                        return result;
+                    }
+                }
+            );
+        }
+
+        vm.ccExtensionManager.info.__eureka = vm.ccExtensionManager.load.__eureka = {
+            api: 0,
+            optional: true
+        };
+
+        vm.ccExtensionManager.instance.__eureka = {
+            beforeProjectSave ({projectData}: CCXSaveData) {
+                // Create a Record of extension's id - extension's url from loadedExtensions
+                const extensionInfo: Record<string, string> = {};
+                loadedExtensions.forEach(({ info }, url) => {
+                    extensionInfo[info.id] = url;
+                });
+
+                const sideloadIds = Object.keys(extensionInfo);
+
+                for (const target of projectData.targets) {
+                    for (const blockId in target.blocks) {
+                        const block = target.blocks[blockId];
+                        if (!block.opcode) continue;
+                        const extensionId = getExtensionIdForOpcode(block.opcode);
+                        if (!extensionId) continue;
+                        if (sideloadIds.includes(extensionId)) {
+                            const mutation = block.mutation ? JSON.stringify(block.mutation) : null;
+                            if (!('mutation' in block)) block.mutation = {};
+                            block.mutation.proccode = `[📎 Sideload] ${block.opcode}`;
+                            block.mutation.children = [];
+                            if (mutation) block.mutation.mutation = mutation;
+                            block.mutation.tagName = 'mutation';
+
+                            block.opcode = 'procedures_call';
                         }
                     }
-
-                    return originalMethod?.(extensions);
                 }
+                for (let i = 0; i < projectData.monitors.length; i++) {
+                    const monitor = projectData.monitors[i];
+                    if (!monitor.opcode) continue;
+                    const extensionId = getExtensionIdForOpcode(monitor.opcode);
+                    if (!extensionId) continue;
+                    if (sideloadIds.includes(extensionId)) {
+                        if (!('sideloadMonitors' in projectData)) projectData.sideloadMonitors = [];
+                        projectData.sideloadMonitors.push(monitor);
+                        projectData.monitors.splice(i, 1);
+                    }
+                }
+
+                projectData.sideloadExtensionURLs = extensionInfo;
             }
-        );
+        };
     }
 
     // Turbowarp extension's polyfill

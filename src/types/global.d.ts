@@ -12,6 +12,7 @@ declare var __scratchAddonsRedux: EuRedux | undefined;
 
 interface EurekaContext {
     declaredIds: string[];
+    idToURLMapping: Map<string, string>;
     vm?: DucktypedVM;
     redux?: EuRedux;
     version: string;
