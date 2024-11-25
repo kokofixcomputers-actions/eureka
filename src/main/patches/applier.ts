@@ -43,10 +43,10 @@ const checkEureka = (eurekaFlag: string): boolean | null => {
  * Get sanitized non-core extension ID for a given sb3 opcode.
  * Note that this should never return a URL. If in the future the SB3 loader supports loading extensions by URL, this
  * ID should be used to (for example) look up the extension's full URL from a table in the SB3's JSON.
- * @param {!string} opcode The opcode to examine for extension.
- * @return {?string} The extension ID, if it exists and is not a core extension.
+ * @param opcode The opcode to examine for extension.
+ * @return The extension ID, if it exists and is not a core extension.
  */
-function getExtensionIdForOpcode(opcode) {
+function getExtensionIdForOpcode (opcode: string): string {
     // Check if opcode is undefined or not a string
     if (typeof opcode !== 'string') {
         return ''; // Return undefined if opcode is not valid
@@ -301,7 +301,7 @@ export function applyPatchesForVM (vm: DucktypedVM, ctx: EurekaContext) {
         MixinApplicator.applyTo(
             vm,
             {
-                deserializeProject (originalMethod, projectJSON, zip) {
+                deserializeProject (originalMethod, projectJSON, zip, extensionCallback) {
                     const sideloadExtensionURLs: Record<string, string> = typeof projectJSON.sideloadExtensionURLs === 'object' ? projectJSON.sideloadExtensionURLs as Record<string, string> : {};
                     const extensionURLs: Record<string, string> = typeof projectJSON.extensionURLs === 'object' ? projectJSON.extensionURLs as Record<string, string> : {};
 
@@ -332,10 +332,17 @@ export function applyPatchesForVM (vm: DucktypedVM, ctx: EurekaContext) {
                                         );
                                         continue;
                                     }
-                                    block.opcode = originalOpcode;
                                     const url = sideloadExtensionURLs[extensionId] ?? extensionURLs[extensionId];
+                                    if (!url) {
+                                        log.warn(
+                                            `find a sideload block with an invalid url: ${extensionId}, ignored.`
+                                        );
+                                        continue;
+                                    }
                                     ctx.declaredIds.push(extensionId, url);
                                     idToURLMapping.set(extensionId, url);
+
+                                    block.opcode = originalOpcode;
                                     try {
                                         const mutation = typeof block.mutation.mutation === 'string' ? JSON.parse(block.mutation.mutation) : null;
                                         if (mutation) {
@@ -351,6 +358,13 @@ export function applyPatchesForVM (vm: DucktypedVM, ctx: EurekaContext) {
                                 } else if ((getExtensionIdForOpcode(block.opcode) in sideloadExtensionURLs) || (typeof projectJSON.sideloadExtensionEnvs === 'object' && getExtensionIdForOpcode(block.opcode) in projectJSON.sideloadExtensionEnvs)) {
                                     const extensionId = getExtensionIdForOpcode(block.opcode);
                                     const url = sideloadExtensionURLs[extensionId] ?? extensionURLs[extensionId];
+                                    if (!url) {
+                                        log.warn(
+                                            `find a sideload block with an invalid url: ${extensionId}, ignored.`
+                                        );
+                                        continue;
+                                    }
+
                                     ctx.declaredIds.push(extensionId, url);
                                     idToURLMapping.set(extensionId, url);
                                 }
@@ -375,7 +389,7 @@ export function applyPatchesForVM (vm: DucktypedVM, ctx: EurekaContext) {
                         delete projectJSON.sideloadExtensionEnvs;
                     }
 
-                    return originalMethod?.(projectJSON, zip);
+                    return originalMethod?.(projectJSON, zip, extensionCallback);
                 },
             }
         );
