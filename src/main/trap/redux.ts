@@ -2,7 +2,7 @@ import log from '../util/console';
 
 export interface EuRedux {
     target: EventTarget;
-    state: DucktypedState;
+    state: Partial<DucktypedState>;
     dispatch(action: DucktypedAction): unknown;
 }
 
@@ -92,14 +92,14 @@ export function getRedux (): Promise<EuRedux> {
 
             function middleware ({ getState, dispatch }: MiddlewareAPI<S, A>) {
                 const euRedux = trappedRedux as EuRedux;
-                euRedux.dispatch = dispatch;
-                euRedux.state = getState();
+                euRedux.dispatch = dispatch as (action: DucktypedAction) => unknown;
+                euRedux.state = getState() as Partial<DucktypedState>;
                 return (next: (action: A) => void) => (action: A) => {
                     const nextReturn = next(action);
                     const ev = new CustomEvent('statechanged', {
                         detail: {
                             prev: euRedux.state,
-                            next: (euRedux.state = getState()),
+                            next: (euRedux.state = getState() as Partial<DucktypedState>),
                             action,
                         },
                     });
