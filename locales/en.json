@@ -43,6 +43,8 @@
     "eureka.modernBlocklyDetected": "Modern blockly detected",
     "eureka.gettingRedux": "Getting Redux...",
     "eureka.reduxReady": "Redux is ready.",
+    "eureka.blocksReady": "ScratchBlocks is ready.",
+    "eureka.lateLoading": "Eureka loads too late, trying to get Redux from DOM..",
     "eureka.failedToGetRedux": "Failed to get Redux.",
     "eureka.settings.polyfillGlobalInstances": "Expose Scratch internal instances globally",
     "eureka.redirectingDeclared": "Redirecting declared extension {extensionURL}",

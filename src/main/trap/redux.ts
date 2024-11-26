@@ -2,8 +2,8 @@ import log from '../util/console';
 
 export interface EuRedux {
     target: EventTarget;
-    state: any;
-    dispatch(action: unknown): unknown;
+    state: DucktypedState;
+    dispatch(action: DucktypedAction): unknown;
 }
 
 interface MiddlewareAPI<S, A> {
@@ -11,7 +11,36 @@ interface MiddlewareAPI<S, A> {
     dispatch: (action: A) => void;
 }
 
+interface DucktypedAction {
+    type: string;
+    [key: string]: unknown;
+}
+
+interface DucktypedState {
+    scratchGui: DucktypedGUIState;
+    scratchPaint: DucktypedPaintState;
+    locales: DucktypedLocalesState;
+    [key: string]: unknown;
+}
+
+interface DucktypedPaintState {
+    [key: string]: unknown;
+}
+
+interface DucktypedLocalesState {
+    locale: string;
+    messages: Record<string, string>;
+    messagesByLocale: Record<string, Record<string, string>>;
+}
+
+interface DucktypedGUIState {
+    vm: DucktypedVM;
+    [key: string]: unknown
+}
+
 type Middleware<S, A> = (api: MiddlewareAPI<S, A>) => (next: (action: A) => void) => (action: A) => void;
+
+type ScratchReduxStore = MiddlewareAPI<DucktypedState, DucktypedAction>;
 
 class ReDucks {
     static compose<S> (...composeArgs: ((arg: S) => S)[]): (arg: S) => S {
@@ -104,4 +133,51 @@ export function getRedux (): Promise<EuRedux> {
             reject(e);
         }
     });
+}
+
+/**
+ * Get redux store instance from DOM, this operation may expensive and rely on react's implementation.
+ * We only use it when page has been loaded and we cannot trap VM.
+ * 
+ * Reference: https://pablo.gg/en/blog/coding/how-to-get-the-redux-state-from-a-react-18-production-build-via-the-browsers-console/
+ * @returns 
+ */
+export function getReduxStoreFromDOM (): ScratchReduxStore | null {
+    const internalRoots = Array.from(document.querySelectorAll('*')).map((el) => {
+        const key = Object.keys(el).filter((keyName) => keyName.includes('__reactContainer')).at(-1);
+        return el[key];
+    }).filter((key) => key);
+
+    for (const root of internalRoots) {
+        const seen = new Map();
+        const stores = new Set<ScratchReduxStore>();
+        
+        const search = (obj) => {
+            if (seen.has(obj)) {
+                return;
+            }
+            seen.set(obj, true);
+            
+            for (const name in obj) {
+                if (name === 'getState') {
+                    const store = obj as ScratchReduxStore;
+                    const state = store.getState();
+                    if (state?.scratchGui?.vm && state.scratchPaint && state.locales) {
+                        return store; // Found target store
+                    }
+                    stores.add(obj);
+                }
+
+                // eslint-disable-next-line no-prototype-builtins
+                if ((obj?.hasOwnProperty?.(name)) && (typeof obj[name] === 'object') && (obj[name] !== null)) {
+                    const result = search(obj[name]);
+                    if (result) return result; // Propagate found store
+                }
+            }
+        };
+
+        const result = search(root);
+        if (result) return result;
+    }
+    return null;
 }
