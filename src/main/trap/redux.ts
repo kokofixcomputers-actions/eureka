@@ -35,7 +35,7 @@ interface DucktypedLocalesState {
 
 interface DucktypedGUIState {
     vm: DucktypedVM;
-    [key: string]: unknown
+    [key: string]: unknown;
 }
 
 type Middleware<S, A> = (api: MiddlewareAPI<S, A>) => (next: (action: A) => void) => (action: A) => void;
