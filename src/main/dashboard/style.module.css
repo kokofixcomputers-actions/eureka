@@ -188,3 +188,21 @@
 .settings .settingsItem {
   @apply flex items-center pl-2 py-4 justify-between font-size-sm color-[var(--eureka-text-primary)] p-2 hover:bg-gray-300 rounded transition-all;
 }
+
+@media (prefers-color-scheme: dark) {
+  .settingsItem:hover {
+    @apply hover:bg-gray-700;
+  }
+
+  .loaderTab {
+    @apply bg-gray-700;
+  }
+
+  .input, .textarea {
+    @apply bg-gray-800;
+  }
+
+  .switch .false {
+    background-color: #4a4a4a;
+  }
+}

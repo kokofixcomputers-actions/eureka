@@ -5,6 +5,7 @@ import { render } from 'solid-js/web';
 import { eureka } from '../ctx';
 import close from './assets/icon--close.svg';
 import globalCss from './style.css';
+import normalizeCss from './normalize.css';
 import styles, { stylesheet } from './style.module.css';
 import formatMessage from 'format-message';
 import { loadedExtensions } from '../middleware/index';
@@ -493,16 +494,28 @@ if (document.readyState === 'loading') {
 }
 
 function initialize () {
-  const style = document.createElement('style');
-  style.id = 'eureka-styles';
-  style.innerHTML = `${globalCss}\n${stylesheet}`;
-  document.head.append(style);
+  const container = document.createElement('div');
+  container.id = 'eureka-dashboard-container';
+  document.body.appendChild(container);
 
-  render(() => (
-    <div id='eureka-dashboard'>
-      <Dashboard />
-    </div>
-  ), document.body);
+  const shadow = container.attachShadow({ mode: 'open' });
+  
+  const globalStyle = document.createElement('style');
+  globalStyle.id = 'eureka-styles';
+  globalStyle.innerHTML = globalCss;
+
+  const normalizeStyle = document.createElement('style');
+  normalizeStyle.id = 'eureka-normalize';
+  normalizeStyle.innerHTML = `${normalizeCss}\n${stylesheet}`;
+  
+  const content = document.createElement('div');
+  content.id = 'eureka-dashboard';
+  
+  document.head.appendChild(globalStyle);
+  shadow.appendChild(normalizeStyle);
+  shadow.appendChild(content);
+
+  render(() => <Dashboard />, content);
 }
 
 eureka.openDashboard = (status: Exclude<DashboardStatus, DashboardStatus.NONE> = DashboardStatus.LOADER) => {

@@ -25,22 +25,22 @@ Eureka is a userscript which can load 3rd-party extensions in any Scratch-based 
 
 | Platform                        | Load extension manually | Convert sideloaded blocks | Load extension from eureka-ify projects | Extended Scratch context | No mixin conflicts |
 |---------------------------------|-------------------------|---------------------------|-----------------------------------------|--------------------------|--------------------|
-| Scratch                         | ✅                      | ✅                       | ✅                                      | ✅                       | ✅                |
-| Scratch(Spork)                  | ✅                      | ✅                       | ✅                                      | ✅                       | ✅                |
-| Codingclip                      | ✅                      | ✅                       | ☣️(1)                                   | ✅                       | ❓                |
-| Cocrea                          | ✅                      | ✅                       | ✅                                      | ✅                       | ❓                |
-| Aerfaying (阿儿法营)             | ✅                      | ✅                       | ✅                                      | ✅                       | ❓                |
-| Co-Create World (共创世界)       | ✅                      | ✅                       | ✅                                      | ✅                       | ❓                |
-| Xiaomawang (小码王)              | ✅                      | ✅                       | ✅                                      | ✅                       | ❓                |
-| CodeLab                         | ✅                      | ✅                       | ✅                                      | ✅                       | ❓                |
-| 40code                          | ✅                      | ✅                       | ✅                                      | ✅                       | ❓                |
-| TurboWarp                       | ✅                      | ✅                       | ✅                                      | ✅                       | ❓                |
-| Xueersi (学而思)                 | ✅                      | ✅                       | ✅                                      | ✅                       | ❓                |
-| Creaticode                      | ✅                      | ✅                       | ✅                                      | ✅                       | ❓                |
-| Adacraft                        | ✅                      | ✅                       | ✅                                      | ✅                        | ❓               |
-| PenguinMod                      | ✅                      | ❓                       | ❓                                      | ❓                       | ❓                |
-| ElectraMod                      | ✅                      | ❓                       | ❓                                      | ❓                       | ❓                |
-| XPLab                           | ✅                      | ❓                       | ❓                                      | ❓                       | ❓                |
+| Scratch                         | ✅                      | ✅                       | ✅                                      | ✅                      | ✅                |
+| Scratch(Spork)                  | ✅                      | ✅                       | ✅                                      | ✅                      | ✅                |
+| Codingclip                      | ✅                      | ✅                       | ☣️(1)                                   | ✅                      | ❓                |
+| Cocrea                          | ✅                      | ✅                       | ✅                                      | ✅                      | ❓                |
+| Aerfaying (阿儿法营)             | ✅                      | ✅                       | ✅                                      | ✅                      | ❓                |
+| Co-Create World (共创世界)       | ✅                      | ✅                       | ✅                                      | ✅                      | ❓                |
+| Xiaomawang (小码王)              | ✅                      | ✅                       | ✅                                      | ✅                      | ❓                |
+| CodeLab                         | ✅                      | ✅                       | ✅                                      | ✅                      | ❓                |
+| 40code                          | ✅                      | ✅                       | ✅                                      | ✅                      | ❓                |
+| TurboWarp                       | ✅                      | ✅                       | ✅                                      | ✅                      | ❓                |
+| Xueersi (学而思)                 | ✅                      | ✅                       | ✅                                      | ✅                      | ❓                |
+| Creaticode                      | ✅                      | ✅                       | ✅                                      | ✅                      | ❓                |
+| Adacraft                        | ✅                      | ✅                       | ✅                                      | ✅                       | ❓               |
+| PenguinMod                      | ✅                      | ✅                       | ❌                                      | ✅                      | ❓                |
+| ElectraMod                      | ✅                      | ✅                       | ❌                                      | ✅                      | ❓                |
+| XPLab                           | ✅                      | ✅                       | ❌                                      | ✅                      | ❓                |
 
 (1): The initialize of the sideloaded blocks in workspace are broken
 
