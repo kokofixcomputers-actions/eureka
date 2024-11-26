@@ -422,6 +422,14 @@ function Dashboard() {
                   </div>
                   <div class={styles.settingsItem}>
                     <span>
+                      <FormattedMessage id='eureka.settings.vm.ccExtensionManager.getLoadedExtensions' default='vm.ccExtensionManager.getLoadedExtensions' />
+                    </span>
+                    <SwitchComponent value={wrappedSettings().mixins['vm.ccExtensionManager.getLoadedExtensions']} onChange={(value) => {
+                      settings.mixins['vm.ccExtensionManager.getLoadedExtensions'] = value;
+                    }} />
+                  </div>
+                  <div class={styles.settingsItem}>
+                    <span>
                       <FormattedMessage id='eureka.settings.blocks.Procedures.addCreateButton_' default='blocks.Procedures.addCreateButton_' />
                     </span>
                     <SwitchComponent value={wrappedSettings().mixins['blocks.Procedures.addCreateButton_']} onChange={(value) => {

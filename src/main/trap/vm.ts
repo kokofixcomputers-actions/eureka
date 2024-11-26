@@ -10,7 +10,7 @@ const MAX_LISTENING_MS = 60 * 1000;
 export async function getVMInstance (): Promise<DucktypedVM> {
     log.info(formatMessage({
         id: 'eureka.trap.vm.listening',
-        default: 'Listening bind function...'
+        default: 'Listening Function.bind()'
     }));
     const oldBind = Function.prototype.bind;
     
