@@ -43,7 +43,7 @@ export function getScratchBlocksInstance (vm: DucktypedVM): Promise<DucktypedScr
     }
     let res = getScratchBlocksInstanceInternal();
     if (res) {
-        return (getScratchBlocksInstance.cache = res);
+        return Promise.resolve(getScratchBlocksInstance.cache = res);
     }
     return new Promise(resolve => {
         // eslint-disable-next-line no-undefined

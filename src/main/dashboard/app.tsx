@@ -1,4 +1,4 @@
-import {createEffect, createSignal, Match, Setter, Show, Switch, For, createMemo} from 'solid-js';
+import {createEffect, createSignal, Match, Setter, Show, Switch, For, createMemo, Index} from 'solid-js';
 import {render} from 'solid-js/web';
 import {eureka} from '../ctx';
 import close from './assets/icon--close.svg';
@@ -55,14 +55,14 @@ function FormattedMessage (props: { id: string, default: string, values?: Record
 function TabNav (props: { tabs: Tab[], active: DashboardStatus, onChange: (tab: DashboardStatus) => void }) {
     return (
         <div class={styles.tabs}>
-            <For each={props.tabs}>{tab => (
+            <Index each={props.tabs}>{tab => (
                 <div
-                    class={`${styles.tab} ${tab.id === props.active ? styles.active : ''}`}
-                    onClick={() => props.onChange(tab.id)}
+                    class={`${styles.tab} ${tab().id === props.active ? styles.active : ''}`}
+                    onClick={() => props.onChange(tab().id)}
                 >
-                    {tab.label}
+                    {tab().label}
                 </div>
-            )}</For>
+            )}</Index>
         </div>
     );
 }
@@ -167,14 +167,14 @@ function LoaderForm () {
     return (
         <div class={styles.loaderForm}>
             <div class={styles.loaderTabs}>
-                <For each={['URL', 'Code', 'File'] as LoaderType[]}>{type => (
+                <Index each={['URL', 'Code', 'File'] as LoaderType[]}>{type => (
                     <div
-                        class={`${styles.loaderTab} ${type === loaderType() ? styles.active : ''}`}
+                        class={`${styles.loaderTab} ${type() === loaderType() ? styles.active : ''}`}
                         onClick={() => setLoaderType(type)}
                     >
-                        {formatMessage({id: `eureka.loader.${type.toLowerCase()}`, default: type})}
+                        {formatMessage({id: `eureka.loader.${type().toLowerCase()}`, default: type()})}
                     </div>
-                )}</For>
+                )}</Index>
             </div>
 
             <div class={styles.loaderItems}>
@@ -384,16 +384,16 @@ function Dashboard () {
                             <Match when={status() === DashboardStatus.SETTINGS}>
                                 <div class={styles.settings}>
                                     <SettingsSection label="Trap">
-                                        <For each={Object.entries(wrappedSettings().trap)}>{([key, value]) => (
+                                        <Index each={Object.entries(wrappedSettings().trap)}>{accessor => (
                                             <SettingsItem
-                                                id={key}
-                                                label={key}
-                                                value={value}
+                                                id={accessor()[0]}
+                                                label={accessor()[0]}
+                                                value={accessor()[1]}
                                                 onChange={newValue => {
-                                                    settings.trap[key] = newValue;
+                                                    settings.trap[accessor()[0]] = newValue;
                                                 }}
                                             />
-                                        )}</For>
+                                        )}</Index>
                                     </SettingsSection>
 
                                     <SettingsSection label="Behavior">
@@ -442,16 +442,16 @@ function Dashboard () {
                                     </SettingsSection>
 
                                     <SettingsSection label="Mixins">
-                                        <For each={Object.entries(wrappedSettings().mixins)}>{([key, value]) => (
+                                        <Index each={Object.entries(wrappedSettings().mixins)}>{accessor => (
                                             <SettingsItem
-                                                id={key}
-                                                label={key}
-                                                value={value}
+                                                id={accessor()[0]}
+                                                label={accessor()[0]}
+                                                value={accessor()[1]}
                                                 onChange={newValue => {
-                                                    settings.mixins[key] = newValue;
+                                                    settings.mixins[accessor()[0]] = newValue;
                                                 }}
                                             />
-                                        )}</For>
+                                        )}</Index>
                                     </SettingsSection>
                                 </div>
                             </Match>
