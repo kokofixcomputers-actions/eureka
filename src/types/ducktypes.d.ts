@@ -2,6 +2,10 @@
  * @import { ExtensionBlockMetadata, ExtensionMetadata } from '../main/middleware/extension-metadata'
  */
 
+interface Ctor<T> {
+    new(): T;
+}
+
 interface DucktypedBlockUtility {
     getParam(paramName: string): any;
 }
@@ -127,8 +131,4 @@ interface DucktypedScratchBlocks {
     getMainWorkspace (): DucktypedBlocksWorkspace;
     WorkspaceSvg: Ctor<DucktypedBlocksWorkspace>;
     __esModule?: boolean;
-}
-
-interface Ctor<T> {
-    new (): T;
 }

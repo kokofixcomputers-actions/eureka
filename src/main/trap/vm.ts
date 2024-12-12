@@ -1,3 +1,4 @@
+/* eslint-disable no-extend-native */
 import formatMessage from 'format-message';
 import log from '../util/console';
 

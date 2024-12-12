@@ -1,4 +1,4 @@
-import Color, { RGBObject } from './color';
+import Color, {RGBObject} from './color';
 
 /**
  * @fileoverview
@@ -124,7 +124,7 @@ class Cast {
             color = Color.hexToRgb(value);
 
             // If the color wasn't *actually* a hex color, cast to black
-            if (!color) color = { r: 0, g: 0, b: 0, a: 255 };
+            if (!color) color = {r: 0, g: 0, b: 0, a: 255};
         } else {
             color = Color.decimalToRgb(Cast.toNumber(value));
         }
@@ -244,4 +244,4 @@ class Cast {
     }
 }
 
-export { Cast };
+export {Cast};

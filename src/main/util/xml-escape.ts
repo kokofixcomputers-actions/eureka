@@ -23,11 +23,11 @@ function xmlEscape (unsafe: string | string[]) {
     }
     return unsafe.replace(/[<>&'"]/g, (c: string) => {
         switch (c) {
-            case '<': return '&lt;';
-            case '>': return '&gt;';
-            case '&': return '&amp;';
-            case '\'': return '&apos;';
-            case '"': return '&quot;';
+        case '<': return '&lt;';
+        case '>': return '&gt;';
+        case '&': return '&amp;';
+        case '\'': return '&apos;';
+        case '"': return '&quot;';
         }
         return '';
     });

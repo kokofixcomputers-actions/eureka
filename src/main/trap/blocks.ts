@@ -3,18 +3,20 @@
  * @param vm Virtual machine instance. For some reasons we cannot use VM here.
  * @returns Blockly instance.
  */
-export async function getScratchBlocksInstance (vm: DucktypedVM): Promise<DucktypedScratchBlocks> {
-    function getScratchBlocksInstanceInternal (): any | null {
+export function getScratchBlocksInstance (vm: DucktypedVM): Promise<DucktypedScratchBlocks> {
+    const getScratchBlocksInstanceInternal: () => any | null = () => {
         // Hijack Function.prototype.apply to get React element instance.
-        function hijack (fn: (...args: unknown[]) => unknown) {
+        const hijack = (fn: (...args: unknown[]) => unknown) => {
             const _orig = Function.prototype.apply;
+            // eslint-disable-next-line no-extend-native
             Function.prototype.apply = function (thisArg: any) {
                 return thisArg;
             };
             const result = fn();
+            // eslint-disable-next-line no-extend-native
             Function.prototype.apply = _orig;
             return result;
-        }
+        };
 
         const events = vm._events?.EXTENSION_ADDED;
         if (events) {
@@ -35,15 +37,16 @@ export async function getScratchBlocksInstance (vm: DucktypedVM): Promise<Duckty
             }
         }
         return null;
-    }
+    };
     if (getScratchBlocksInstance.cache) {
-        return getScratchBlocksInstance.cache;
+        return Promise.resolve(getScratchBlocksInstance.cache);
     }
     let res = getScratchBlocksInstanceInternal();
     if (res) {
         return (getScratchBlocksInstance.cache = res);
     }
-    return new Promise((resolve) => {
+    return new Promise(resolve => {
+        // eslint-disable-next-line no-undefined
         let state: any = undefined;
         Reflect.defineProperty(vm._events, 'EXTENSION_ADDED', {
             get: () => state,

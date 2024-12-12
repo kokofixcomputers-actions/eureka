@@ -1,15 +1,14 @@
 import './meta.js?userscript-metadata';
 import log from './util/console';
 import settingsAgent from './util/settings';
-import { version } from '../../package.json';
-import { getVMInstance } from './trap/vm';
-import { getScratchBlocksInstance } from './trap/blocks';
-import './util/l10n';
+import {version} from '../../package.json';
+import {getVMInstance} from './trap/vm';
+import {getScratchBlocksInstance} from './trap/blocks';
 import formatMessage from 'format-message';
-import { eureka } from './ctx';
-import { applyPatchesForVM, applyPatchesForBlocks } from './patches/applier';
-import { setLocale } from './util/l10n';
-import { getRedux, getReduxStoreFromDOM } from './trap/redux';
+import {eureka} from './ctx';
+import {applyPatchesForVM, applyPatchesForBlocks} from './patches/applier';
+import {setLocale} from './util/l10n';
+import {getRedux, getReduxStoreFromDOM} from './trap/redux';
 import './dashboard/app';
 
 log.info(
@@ -28,10 +27,10 @@ let vmTrapped = false;
 const trapViaBind = async () => {
     if (settings.trap.vm) {
         try {
-            const vm = eureka.vm = await getVMInstance().then(vm => {
+            const vm = eureka.vm = await getVMInstance().then(trappedVM => {
                 vmTrapped = true;
                 if (settings.trap.blocks) {
-                    getScratchBlocksInstance(vm).then(blocks => {
+                    getScratchBlocksInstance(trappedVM).then(blocks => {
                         eureka.blocks = blocks;
                         log.info(
                             formatMessage({
@@ -39,23 +38,25 @@ const trapViaBind = async () => {
                                 default: 'ScratchBlocks is ready.'
                             })
                         );
-                        if (settings.behavior.polyfillGlobalInstances && typeof globalThis.ScratchBlocks === 'undefined') {
+                        if (settings.behavior.polyfillGlobalInstances &&
+                            typeof globalThis.ScratchBlocks === 'undefined') {
                             globalThis.ScratchBlocks = eureka.blocks;
                         }
 
                         if (!settings.behavior.headless) {
                             applyPatchesForBlocks(eureka.blocks);
                         }
-                    }).catch(e => {
-                        log.error(
-                            formatMessage({
-                                id: 'eureka.failedToGetBlocks',
-                                default: 'Failed to get ScratchBlocks.'
-                            })
-                            , '\n', e);
-                    });
+                    })
+                        .catch(e => {
+                            log.error(
+                                formatMessage({
+                                    id: 'eureka.failedToGetBlocks',
+                                    default: 'Failed to get ScratchBlocks.'
+                                })
+                                , '\n', e);
+                        });
                 }
-                return vm;
+                return trappedVM;
             });
             if (settings.behavior.polyfillGlobalInstances && typeof globalThis.vm === 'undefined') {
                 globalThis.vm = vm;
@@ -132,7 +133,7 @@ const trapRedux = async () => {
 };
 
 // Second trap - Using React internal Redux store
-const trapViaReduxStore = async () => {
+const trapViaReduxStore = () => {
     if (vmTrapped) return;
     try {
         const store = getReduxStoreFromDOM();
@@ -160,14 +161,15 @@ const trapViaReduxStore = async () => {
                     if (!settings.behavior.headless) {
                         applyPatchesForBlocks(eureka.blocks);
                     }
-                }).catch(e => {
-                    log.error(
-                        formatMessage({
-                            id: 'eureka.failedToGetBlocks',
-                            default: 'Failed to get ScratchBlocks.'
-                        })
-                        , '\n', e);
-                });
+                })
+                    .catch(e => {
+                        log.error(
+                            formatMessage({
+                                id: 'eureka.failedToGetBlocks',
+                                default: 'Failed to get ScratchBlocks.'
+                            })
+                            , '\n', e);
+                    });
             }
 
             if (settings.behavior.polyfillGlobalInstances && typeof globalThis.vm === 'undefined') {
@@ -200,6 +202,7 @@ const trapViaReduxStore = async () => {
     }
 };
 
+// eslint-disable-next-line no-negated-condition
 if (document.readyState !== 'complete') {
     // Run both traps with race condition
     trapViaBind();

@@ -1,11 +1,16 @@
 import log from '../util/console';
 import settingsAgent from '../util/settings';
-import { MixinApplicator } from '../util/inject';
-import { injectToolbox } from './toolbox-stuffs';
-import { forwardedLoadExtensionURL, loadedExtensions, predefinedCallbackKeys, refreshForwardedBlocks } from '../middleware';
-import { BlockType } from '../middleware/extension-metadata';
+import {MixinApplicator} from '../util/inject';
+import {injectToolbox} from './toolbox-stuffs';
+import {
+    forwardedLoadExtensionURL,
+    loadedExtensions,
+    predefinedCallbackKeys,
+    refreshForwardedBlocks
+} from '../middleware';
+import {BlockType} from '../middleware/extension-metadata';
 import xmlEscape from '../util/xml-escape';
-import { maybeFormatMessage } from '../util/maybe-format-message';
+import {maybeFormatMessage} from '../util/maybe-format-message';
 import * as l10n from '../util/l10n';
 import formatMessage from 'format-message';
 
@@ -26,14 +31,14 @@ function isPromise (value: unknown) {
 
 const checkEureka = (eurekaFlag: string): boolean | null => {
     switch (eurekaFlag) {
-        case '🧐 Chibi?':
-            log.warn("'🧐 Chibi?' is deprecated, use '🧐 Eureka?' instead.");
-            return true;
-        case '🧐 Chibi Installed?':
-            log.warn("'🧐 Chibi Installed?' is deprecated, use '🧐 Eureka?' instead.");
-            return true;
-        case '🧐 Eureka?':
-            return true;
+    case '🧐 Chibi?':
+        log.warn("'🧐 Chibi?' is deprecated, use '🧐 Eureka?' instead.");
+        return true;
+    case '🧐 Chibi Installed?':
+        log.warn("'🧐 Chibi Installed?' is deprecated, use '🧐 Eureka?' instead.");
+        return true;
+    case '🧐 Eureka?':
+        return true;
     }
     return null;
 };
@@ -68,6 +73,10 @@ function getExtensionIdForOpcode (opcode: string): string {
     }
 }
 
+/**
+ * Apply scratch-blocks-related patches.
+ * @param blocks The ScratchBlocks instance.
+ */
 export function applyPatchesForBlocks (blocks?: DucktypedScratchBlocks) {
     // Add eureka's toolbox stuffs
     if (blocks) {
@@ -83,6 +92,7 @@ export function applyPatchesForBlocks (blocks?: DucktypedScratchBlocks) {
                     const toolboxCallbacks = blocks?.getMainWorkspace()?.toolboxCategoryCallbacks;
                     const originalCallback = toolboxCallbacks.get('PROCEDURE');
                     toolboxCallbacks.set('PROCEDURE', function (workspace) {
+                        // eslint-disable-next-line no-invalid-this
                         const xmlList = originalCallback.call(this, workspace);
                         injectToolbox(xmlList, workspace);
 
@@ -99,6 +109,7 @@ export function applyPatchesForBlocks (blocks?: DucktypedScratchBlocks) {
                                 if (key === 'PROCEDURE') {
                                     const originalCallback = callback;
                                     callback = function (workspace) {
+                                        // eslint-disable-next-line no-invalid-this
                                         const xmlList = originalCallback.call(this, workspace);
                                         injectToolbox(xmlList, workspace);
 
@@ -107,7 +118,7 @@ export function applyPatchesForBlocks (blocks?: DucktypedScratchBlocks) {
                                 }
 
                                 return originalMethod(key, callback);
-                            },
+                            }
                         }
                     );
                 }
@@ -121,7 +132,9 @@ export function applyPatchesForBlocks (blocks?: DucktypedScratchBlocks) {
                             init (originalMethod) {
                                 originalMethod();
                                 queueMicrotask(() => {
-                                    if (this.getFieldValue('VALUE') === '🧐 Eureka?' && !(this.dragStrategy instanceof blocks.dragging.BlockDragStrategy) && !this.isInFlyout) {
+                                    if (this.getFieldValue('VALUE') === '🧐 Eureka?' &&
+                                        !(this.dragStrategy instanceof blocks.dragging.BlockDragStrategy) &&
+                                        !this.isInFlyout) {
                                         this.setDragStrategy(new blocks.dragging.BlockDragStrategy(this));
                                         this.dragStrategy.block?.dispose();
                                     }
@@ -168,6 +181,28 @@ export function applyPatchesForBlocks (blocks?: DucktypedScratchBlocks) {
     workspace.toolboxRefreshEnabled_ = true;
 }
 
+/**
+ * Get unsupported API from a Turbowarp VM instance.
+ * @param vm The VM instance.
+ * @returns The unsupported API, if it exists. (otherwise null)
+ */
+function getUnsupportedAPI (vm: DucktypedVM) {
+    if (typeof vm.exports?.i_will_not_ask_for_help_when_these_break === 'function') {
+        // Do not emit any warning messages
+        const warn = console.warn;
+        console.warn = function () { }; // No-op
+        const api = vm.exports.i_will_not_ask_for_help_when_these_break();
+        console.warn = warn;
+        return api;
+    }
+    return null;
+}
+
+/**
+ * Apply VM-related patches.
+ * @param vm The VM instance.
+ * @param ctx The Eureka context.
+ */
 export function applyPatchesForVM (vm: DucktypedVM, ctx: EurekaContext) {
     if (settings.mixins['vm.extensionManager.loadExtensionURL']) {
         MixinApplicator.applyTo(
@@ -178,16 +213,19 @@ export function applyPatchesForVM (vm: DucktypedVM, ctx: EurekaContext) {
                         extensionURL = ctx.idToURLMapping.get(extensionURL)!;
                     }
 
-                    if (settings.behavior.redirectDeclared && ctx.declaredIds.includes(extensionURL) && !loadedExtensions.has(extensionURL)) {
+                    if (settings.behavior.redirectDeclared &&
+                        ctx.declaredIds.includes(extensionURL) &&
+                        !loadedExtensions.has(extensionURL)) {
                         log.info(formatMessage({
                             id: 'eureka.redirectingDeclared',
                             default: 'Redirecting declared extension {extensionURL}'
-                        }, { extensionURL }));
+                        }, {extensionURL}));
                         return forwardedLoadExtensionURL(extensionURL);
                     }
 
                     const isURL = (url: string) => {
                         try {
+                            // eslint-disable-next-line no-new
                             new URL(url);
                             return true;
                         // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -201,12 +239,12 @@ export function applyPatchesForVM (vm: DucktypedVM, ctx: EurekaContext) {
                         log.info(formatMessage({
                             id: 'eureka.redirectingURL',
                             default: 'Redirecting URL {extensionURL}'
-                        }, { extensionURL }));
+                        }, {extensionURL}));
                         return forwardedLoadExtensionURL(extensionURL);
                     }
 
                     return originalMethod?.(extensionURL);
-                },
+                }
             }
         );
     }
@@ -218,7 +256,7 @@ export function applyPatchesForVM (vm: DucktypedVM, ctx: EurekaContext) {
                 async refreshBlocks (originalMethod) {
                     const result = await originalMethod?.();
                     return [...result, await refreshForwardedBlocks()];
-                },
+                }
             }
         );
     }
@@ -291,7 +329,7 @@ export function applyPatchesForVM (vm: DucktypedVM, ctx: EurekaContext) {
                     obj.sideloadExtensionURLs = extensionInfo;
 
                     return JSON.stringify(obj);
-                },
+                }
             }
         );
     }
@@ -301,8 +339,12 @@ export function applyPatchesForVM (vm: DucktypedVM, ctx: EurekaContext) {
             vm,
             {
                 deserializeProject (originalMethod, projectJSON, zip, extensionCallback) {
-                    const sideloadExtensionURLs: Record<string, string> = typeof projectJSON.sideloadExtensionURLs === 'object' ? projectJSON.sideloadExtensionURLs as Record<string, string> : {};
-                    const extensionURLs: Record<string, string> = typeof projectJSON.extensionURLs === 'object' ? projectJSON.extensionURLs as Record<string, string> : {};
+                    const sideloadExtensionURLs: Record<string, string> =
+                        typeof projectJSON.sideloadExtensionURLs === 'object' ?
+                        projectJSON.sideloadExtensionURLs as Record<string, string> : {};
+                    const extensionURLs: Record<string, string> =
+                        typeof projectJSON.extensionURLs === 'object' ?
+                        projectJSON.extensionURLs as Record<string, string> : {};
 
                     // Migrate from old eureka
                     if (projectJSON.extensionEnvs) {
@@ -343,18 +385,27 @@ export function applyPatchesForVM (vm: DucktypedVM, ctx: EurekaContext) {
 
                                     block.opcode = originalOpcode;
                                     try {
-                                        const mutation = typeof block.mutation.mutation === 'string' ? JSON.parse(block.mutation.mutation) : null;
+                                        const mutation =
+                                            typeof block.mutation.mutation === 'string' ?
+                                                JSON.parse(block.mutation.mutation) : null;
                                         if (mutation) {
                                             block.mutation = mutation;
                                         } else delete block.mutation;
                                     } catch (e) {
                                         log.error(formatMessage({
                                             id: 'eureka.errorIgnored',
-                                            default: 'An error occurred while parsing the mutation of a sideload block, ignored. Error: {error}',
+                                            // eslint-disable-next-line max-len
+                                            default: 'An error occurred while parsing the mutation of a sideload block, ignored. Error: {error}'
                                         }), e);
                                         delete block.mutation;
                                     }
-                                } else if ((getExtensionIdForOpcode(block.opcode) in sideloadExtensionURLs) || (typeof projectJSON.sideloadExtensionEnvs === 'object' && getExtensionIdForOpcode(block.opcode) in projectJSON.sideloadExtensionEnvs)) {
+                                } else if (
+                                    (getExtensionIdForOpcode(block.opcode) in sideloadExtensionURLs) ||
+                                    (
+                                        typeof projectJSON.sideloadExtensionEnvs === 'object' &&
+                                        getExtensionIdForOpcode(block.opcode) in projectJSON.sideloadExtensionEnvs
+                                    )
+                                ) {
                                     const extensionId = getExtensionIdForOpcode(block.opcode);
                                     const url = sideloadExtensionURLs[extensionId] ?? extensionURLs[extensionId];
                                     if (!url) {
@@ -396,7 +447,7 @@ export function applyPatchesForVM (vm: DucktypedVM, ctx: EurekaContext) {
                     }
 
                     return originalMethod?.(projectJSON, zip, extensionCallback);
-                },
+                }
             }
         );
     }
@@ -406,7 +457,7 @@ export function applyPatchesForVM (vm: DucktypedVM, ctx: EurekaContext) {
         MixinApplicator.applyTo(
             vm,
             {
-                async _loadExtensions (originalMethod, extensionIDs, extensionURLs) {
+                _loadExtensions (originalMethod, extensionIDs, extensionURLs) {
                     const sideloadExtensionPromises: Promise<void>[] = [];
                     for (const extensionId of extensionIDs) {
                         if (ctx.declaredIds.includes(extensionId)) {
@@ -423,7 +474,7 @@ export function applyPatchesForVM (vm: DucktypedVM, ctx: EurekaContext) {
                         ...sideloadExtensionPromises
                     ]).then();
 
-                },
+                }
             }
         );
     }
@@ -436,7 +487,7 @@ export function applyPatchesForVM (vm: DucktypedVM, ctx: EurekaContext) {
                     l10n.setLocale(locale);
                     vm.emit('LOCALE_CHANGED', locale);
                     return originalMethod?.(locale, messages);
-                },
+                }
             }
         );
     }
@@ -456,7 +507,7 @@ export function applyPatchesForVM (vm: DucktypedVM, ctx: EurekaContext) {
                     }
                     // Since the param exists, assume the following checks will be skipped for performance purposes.
                     return value;
-                },
+                }
             }
         );
     }
@@ -469,21 +520,21 @@ export function applyPatchesForVM (vm: DucktypedVM, ctx: EurekaContext) {
             {
                 descendInput (originalMethod, block) {
                     switch (block.opcode) {
-                        case 'argument_reporter_boolean': {
-                            const name = block.fields.VALUE.value;
-                            const index = this.script.arguments.lastIndexOf(name);
-                            if (index === -1) {
-                                if (checkEureka(name) !== null) {
-                                    return {
-                                        kind: 'constant',
-                                        value: true
-                                    };
-                                }
+                    case 'argument_reporter_boolean': {
+                        const name = block.fields.VALUE.value;
+                        const index = this.script.arguments.lastIndexOf(name);
+                        if (index === -1) {
+                            if (checkEureka(name) !== null) {
+                                return {
+                                    kind: 'constant',
+                                    value: true
+                                };
                             }
                         }
                     }
+                    }
                     return originalMethod?.(block);
-                },
+                }
             }
         );
     }
@@ -540,7 +591,7 @@ export function applyPatchesForVM (vm: DucktypedVM, ctx: EurekaContext) {
             beforeProjectSave ({projectData}: CCXSaveData) {
                 // Create a Record of extension's id - extension's url from loadedExtensions
                 const extensionInfo: Record<string, string> = {};
-                loadedExtensions.forEach(({ info }, url) => {
+                loadedExtensions.forEach(({info}, url) => {
                     extensionInfo[info.id] = url;
                 });
 
@@ -589,33 +640,35 @@ export function applyPatchesForVM (vm: DucktypedVM, ctx: EurekaContext) {
                 _convertForScratchBlocks (originalMethod, blockInfo, categoryInfo) {
                     if (typeof blockInfo !== 'string') {
                         switch (blockInfo.blockType) {
-                            case BlockType.LABEL:
-                                return {
-                                    info: blockInfo,
-                                    xml: `<label text="${xmlEscape(blockInfo.text)}"/>`
-                                };
-                            case BlockType.XML:
-                                return {
-                                    info: blockInfo,
-                                    xml: blockInfo.xml
-                                };
-                            default: {
-                                if ('extensions' in blockInfo) {
-                                    const converted = originalMethod?.(blockInfo, categoryInfo);
-                                    if (!('extensions' in converted.json)) converted.json.extensions = [/*'scratch_extension'*/];
-                                    for (const extension of blockInfo.extensions!) {
-                                        if (!converted.json.extensions.includes(extension)) {
-                                            converted.json.extensions.push(extension);
-                                        }
-                                    }
-                                    return converted;
+                        case BlockType.LABEL:
+                            return {
+                                info: blockInfo,
+                                xml: `<label text="${xmlEscape(blockInfo.text)}"/>`
+                            };
+                        case BlockType.XML:
+                            return {
+                                info: blockInfo,
+                                xml: blockInfo.xml
+                            };
+                        default: {
+                            if ('extensions' in blockInfo) {
+                                const converted = originalMethod?.(blockInfo, categoryInfo);
+                                if (!('extensions' in converted.json)) {
+                                    converted.json.extensions = [/* 'scratch_extension'*/];
                                 }
-                                return originalMethod?.(blockInfo, categoryInfo);
+                                for (const extension of blockInfo.extensions!) {
+                                    if (!converted.json.extensions.includes(extension)) {
+                                        converted.json.extensions.push(extension);
+                                    }
+                                }
+                                return converted;
                             }
+                            return originalMethod?.(blockInfo, categoryInfo);
+                        }
                         }
                     }
                     return originalMethod?.(blockInfo, categoryInfo);
-                },
+                }
             }
         );
     }
@@ -633,25 +686,13 @@ export function applyPatchesForVM (vm: DucktypedVM, ctx: EurekaContext) {
                         workspace.registerButtonCallback(`${categoryInfo.id}_${buttonInfo.func}`, buttonInfo.callFunc);
                         return {
                             info: buttonInfo,
+                            // eslint-disable-next-line max-len
                             xml: `<button text="${xmlEscape(buttonText)}" callbackKey="${xmlEscape(`${categoryInfo.id}_${buttonInfo.func}`)}"></button>`
                         };
                     }
                     return originalMethod?.(buttonInfo, categoryInfo);
-                },
+                }
             }
         );
     }
 }
-
-function getUnsupportedAPI (vm: DucktypedVM) {
-    if (typeof vm.exports?.i_will_not_ask_for_help_when_these_break === 'function') {
-        // Do not emit any warning messages
-        const warn = console.warn;
-        console.warn = function () { }; // No-op
-        const api = vm.exports.i_will_not_ask_for_help_when_these_break();
-        console.warn = warn;
-        return api;
-    }
-    return null;
-}
-

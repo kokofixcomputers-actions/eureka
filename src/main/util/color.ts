@@ -27,12 +27,12 @@ class Color {
 
     /** @type {RGBObject} */
     static get RGB_BLACK () {
-        return { r: 0, g: 0, b: 0 };
+        return {r: 0, g: 0, b: 0};
     }
 
     /** @type {RGBObject} */
     static get RGB_WHITE () {
-        return { r: 255, g: 255, b: 255 };
+        return {r: 255, g: 255, b: 255};
     }
 
     /**
@@ -59,7 +59,7 @@ class Color {
         const r = (decimal >> 16) & 0xff;
         const g = (decimal >> 8) & 0xff;
         const b = decimal & 0xff;
-        return { r: r, g: g, b: b, a: a > 0 ? a : 255 };
+        return {r: r, g: g, b: b, a: a > 0 ? a : 255};
     }
 
     /**
@@ -144,37 +144,37 @@ class Color {
         let b;
 
         switch (i) {
-            default:
-            case 0:
-                r = v;
-                g = t;
-                b = p;
-                break;
-            case 1:
-                r = q;
-                g = v;
-                b = p;
-                break;
-            case 2:
-                r = p;
-                g = v;
-                b = t;
-                break;
-            case 3:
-                r = p;
-                g = q;
-                b = v;
-                break;
-            case 4:
-                r = t;
-                g = p;
-                b = v;
-                break;
-            case 5:
-                r = v;
-                g = p;
-                b = q;
-                break;
+        default:
+        case 0:
+            r = v;
+            g = t;
+            b = p;
+            break;
+        case 1:
+            r = q;
+            g = v;
+            b = p;
+            break;
+        case 2:
+            r = p;
+            g = v;
+            b = t;
+            break;
+        case 3:
+            r = p;
+            g = q;
+            b = v;
+            break;
+        case 4:
+            r = t;
+            g = p;
+            b = v;
+            break;
+        case 5:
+            r = v;
+            g = p;
+            b = q;
+            break;
         }
 
         return {
@@ -206,7 +206,7 @@ class Color {
             s = (v - x) / v;
         }
 
-        return { h: h, s: s, v: v };
+        return {h: h, s: s, v: v};
     }
 
     /**

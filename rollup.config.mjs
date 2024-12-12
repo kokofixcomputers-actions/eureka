@@ -10,6 +10,7 @@ const { packageJson } = await readPackageUp();
 export default defineConfig(
   Object.entries({
     'eureka': 'src/main/index.ts',
+    'eureka-meta': 'src/main/placeholder.ts',
   }).map(([name, entry]) => ({
     input: entry,
     plugins: [
@@ -30,7 +31,7 @@ export default defineConfig(
       process.env.ROLLUP_WATCH ? serve('dist') : undefined
     ],
     output: {
-      format: 'iife',
+      format: name === 'eureka-meta' ? 'es' : 'iife',
       file: `dist/${name}.user.js`,
       indent: false,
     },

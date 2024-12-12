@@ -76,9 +76,9 @@ export class SettingsAgent {
     private readonly defaultSettings: Settings;
     public settings: Settings;
 
-    constructor (storageKey: string, defaultSettings: Settings) {
+    constructor (storageKey: string, defaults: Settings) {
         this.storageKey = storageKey;
-        this.defaultSettings = defaultSettings;
+        this.defaultSettings = defaults;
 
         // Initialize settings from localStorage or default
         let savedSettings = localStorage.getItem(storageKey);
@@ -86,16 +86,16 @@ export class SettingsAgent {
             savedSettings = '{}';
             localStorage.setItem(storageKey, JSON.stringify(defaultSettings));
         }
-        this.settings = savedSettings
-            ? this.mergeWithDefaults(JSON.parse(savedSettings), defaultSettings)
-            : { ...defaultSettings };
+        this.settings = savedSettings ?
+            this.mergeWithDefaults(JSON.parse(savedSettings), defaultSettings) :
+            {...defaultSettings};
 
         // Create proxy-based settings
         this.settings = this.createProxy(this.settings);
     }
 
     private mergeWithDefaults (saved: Settings, defaults: Settings): Settings {
-        const result: Settings = { ...defaults };
+        const result: Settings = {...defaults};
 
         for (const key in saved) {
             if (typeof saved[key] === 'object' && saved[key] !== null &&

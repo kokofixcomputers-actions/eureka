@@ -148,84 +148,6 @@ export interface BlockArgs {
  */
 export type FormattableString = string;
 
-/**
- * Standard Scratch extension class.
- * Based on LLK's example https://github.com/LLK/scratch-vm/blob/develop/docs/extensions.md
- */
-export interface StandardScratchExtensionClass {
-    new?: (runtime: object) => void;
-    /**
-     * Scratch will call this method *once* when the extension loads.
-     * This method's job is to tell Scratch things like the extension's ID, name, and what blocks it supports.
-     */
-    getInfo: () => ExtensionMetadata;
-    [propName: string]: unknown;
-}
-
-/**
- * All the metadata needed to register an extension.
- */
-export interface ExtensionMetadata {
-    /**
-     * A unique alphanumeric identifier for this extension. No special characters allowed.
-     */
-    id: string;
-    /**
-     * The human-readable name of this extension.
-     * Defaults to ID if not specified.
-     */
-    name?: string;
-    showStatusButton?: boolean;
-    /**
-     * URI for an image to be placed on each block in this extension.
-     * Should be a data: URI
-     */
-    blockIconURI?: string;
-    /**
-     * URI for an image to be placed on this extension's category menu item.
-     * Should be a data: URI
-     */
-    menuIconURI?: string;
-    /**
-     * Link to documentation content for this extension
-     */
-    docsURI?: string;
-    /**
-     * Should be a hex color code.
-     */
-    color1?: `#${string}`;
-    /**
-     * Should be a hex color code.
-     */
-    color2?: `#${string}`;
-    /**
-     * Should be a hex color code.
-     */
-    color3?: `#${string}`;
-    /**
-     * The blocks provided by this extension, plus separators
-     */
-    blocks: (ExtensionBlockMetadata | string)[];
-    /**
-     * Map of menu name to metadata for each of this extension's menus.
-     */
-    menus?: Record<string, ExtensionMenu>;
-    /**
-     * @deprecated only preserved, no practical use
-     */
-    customFieldTypes?: Record<string, CustomFieldType>;
-    /**
-     * Translation maps
-     * @deprecated only exists in documentation, not implemented
-     */
-    translation_map?: Record<string, Record<string, string>>;
-    /**
-     * Target types
-     * @deprecated only exists in documentation, not implemented
-     */
-    targetTypes?: string[];
-}
-
 export interface ExtensionMenu {
     acceptReporters?: boolean;
     items: MenuItems;
@@ -237,6 +159,35 @@ export interface ExtensionMenu {
 export interface CustomFieldType {
     extendedName: string;
     implementation: unknown;
+}
+
+export interface ExtensionArgumentMetadata {
+    /**
+     * The type of the argument (number, string, etc.)
+     */
+    type: ArgumentType;
+    /**
+     * The default value of this argument
+     */
+    defaultValue?: unknown;
+    /**
+     * The name of the menu to use for this argument, if any.
+     */
+    menu?: string;
+    /**
+     * Only available when type is INLINE_IMAGE
+     */
+    dataURI?: string;
+    /**
+     * Only available when type is INLINE_IMAGE
+     * Whether the image should be flipped horizontally when the editor
+     * has a right to left language selected as its locale.By default, the image is not flipped.
+     */
+    flipRTL?: boolean;
+    /**
+     * Only available when type is INLINE_IMAGE
+     */
+    alt?: string;
 }
 
 /**
@@ -325,30 +276,80 @@ export interface ExtensionBlockMetadata {
     extensions?: string[];
 }
 
-export interface ExtensionArgumentMetadata {
+/**
+ * All the metadata needed to register an extension.
+ */
+export interface ExtensionMetadata {
     /**
-     * The type of the argument (number, string, etc.)
+     * A unique alphanumeric identifier for this extension. No special characters allowed.
      */
-    type: ArgumentType;
+    id: string;
     /**
-     * The default value of this argument
+     * The human-readable name of this extension.
+     * Defaults to ID if not specified.
      */
-    defaultValue?: unknown;
+    name?: string;
+    showStatusButton?: boolean;
     /**
-     * The name of the menu to use for this argument, if any.
+     * URI for an image to be placed on each block in this extension.
+     * Should be a data: URI
      */
-    menu?: string;
+    blockIconURI?: string;
     /**
-     * Only available when type is INLINE_IMAGE
+     * URI for an image to be placed on this extension's category menu item.
+     * Should be a data: URI
      */
-    dataURI?: string;
+    menuIconURI?: string;
     /**
-     * Only available when type is INLINE_IMAGE
-     * Whether the image should be flipped horizontally when the editor has a right to left language selected as its locale. By default, the image is not flipped.
+     * Link to documentation content for this extension
      */
-    flipRTL?: boolean;
+    docsURI?: string;
     /**
-     * Only available when type is INLINE_IMAGE
+     * Should be a hex color code.
      */
-    alt?: string;
+    color1?: `#${string}`;
+    /**
+     * Should be a hex color code.
+     */
+    color2?: `#${string}`;
+    /**
+     * Should be a hex color code.
+     */
+    color3?: `#${string}`;
+    /**
+     * The blocks provided by this extension, plus separators
+     */
+    blocks: (ExtensionBlockMetadata | string)[];
+    /**
+     * Map of menu name to metadata for each of this extension's menus.
+     */
+    menus?: Record<string, ExtensionMenu>;
+    /**
+     * @deprecated only preserved, no practical use
+     */
+    customFieldTypes?: Record<string, CustomFieldType>;
+    /**
+     * Translation maps
+     * @deprecated only exists in documentation, not implemented
+     */
+    translation_map?: Record<string, Record<string, string>>;
+    /**
+     * Target types
+     * @deprecated only exists in documentation, not implemented
+     */
+    targetTypes?: string[];
+}
+
+/**
+ * Standard Scratch extension class.
+ * Based on LLK's example https://github.com/LLK/scratch-vm/blob/develop/docs/extensions.md
+ */
+export interface StandardScratchExtensionClass {
+    new?: (runtime: object) => void;
+    /**
+     * Scratch will call this method *once* when the extension loads.
+     * This method's job is to tell Scratch things like the extension's ID, name, and what blocks it supports.
+     */
+    getInfo: () => ExtensionMetadata;
+    [propName: string]: unknown;
 }

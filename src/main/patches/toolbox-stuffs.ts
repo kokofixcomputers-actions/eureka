@@ -1,6 +1,12 @@
 import format from 'format-message';
-import { eureka } from '../ctx';
+import {eureka} from '../ctx';
 
+/**
+ * Inject Eureka toolbox into the workspace
+ * @param xmlList the target toolbox's xml list
+ * @param workspace The workspace, usuaully `Blockly.getMainWorkspace()`
+ * @returns The modified xml list
+ */
 export function injectToolbox (xmlList: HTMLElement[], workspace: DucktypedBlocksWorkspace) {
     // Add separator and label
     const sep = document.createElement('sep');

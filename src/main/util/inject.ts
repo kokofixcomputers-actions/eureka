@@ -39,7 +39,7 @@ class MixinApplicator {
                         ...args: any[]
                     ) {
                         // Call the mixin method, passing original method
-                        return (mixinDescriptor[key] as (...args: any[]) => any).call(
+                        return (mixinDescriptor[key] as (...innerArgs: any[]) => any).call(
                             this,
                             originalMethod.bind(this),
                             ...args
@@ -78,4 +78,4 @@ class MixinApplicator {
 }
 
 
-export { MixinApplicator };
+export {MixinApplicator};
