@@ -44,7 +44,7 @@
     "husky": "^9.1.7",
     "read-package-up": "^11.0.0",
     "rollup-plugin-serve": "^1.1.1",
-    "rollup-plugin-userscript": "^0.3.4",
+    "rollup-plugin-userscript": "^0.3.5",
     "typescript": "^5.7.2",
     "unocss": "^0.65.2",
     "@playwright/test": "^1.49.1",
