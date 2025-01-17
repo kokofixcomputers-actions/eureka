@@ -46,8 +46,8 @@ importers:
         specifier: ^8.20.0
         version: 8.20.0(eslint@8.57.1)(typescript@5.7.3)
       '@unocss/postcss':
-        specifier: ^65.4.0
-        version: 65.4.0(postcss@8.4.47)
+        specifier: ^65.4.2
+        version: 65.4.2(postcss@8.4.47)
       '@violentmonkey/types':
         specifier: ^0.2.0
         version: 0.2.0
